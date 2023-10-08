@@ -5,12 +5,52 @@ when switching between host machines. It's not perfect yet as the repository
 does not have all the files added yet but I'll keep on adding them when I
 remember.
 
-## Targets
+## Configurations
 
 The configuration files configure different applications and tools. Here's a
-list of these those configuration targets:
+list of these those configuration targets.
 
-1. Vim
+### Vim
+
+```
+.vim
+└── autoload
+    └── plug.vim
+.vimrc
+```
+
+The Vim setup uses [vim-plug](https://github.com/junegunn/vim-plug) plugin
+manager. My current machine includes a plugin directory in `~/.vim/plugged`
+(as defined in `~/.vimrc`) but the plugins aren't added to this repository
+because each entry in the directory is a submodule. The plugins can be
+installed to the machine by calling `:PlugInstall` in Vim. 
+
+#### Plugins
+
+- [`morhetz/gruvbox`](https://github.com/morhetz/gruvbox)
+
+### Gnome Terminal
+
+```bash
+.config/
+└── gnome-terminal
+    └── gnome-terminal-profiles.dconf
+```
+
+`gnome-terminal-profiles.dconf` includes Gnome Terminal profiles. It includes
+a Gruvbox Dark profile created via [Gogh](https://github.com/Gogh-Co/Gogh).
+
+The profiles have been exported with the following `dconf` command:
+
+```bash
+dconf dump /org/gnome/terminal/legacy/profiles:/ > gnome-terminal-profiles.dconf
+```
+
+When a new machine is set up, the profiles can also be loaded in with `dconf`:
+
+```bash
+dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
+```
 
 ## License
 
