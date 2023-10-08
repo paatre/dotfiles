@@ -13,9 +13,6 @@
 " Set Vim to be non Vi-compatible
 set nocompatible
 
-" Disable Vim's swap file creation
-set noswapfile
-
 " Keep 200 lines of command line history
 set history=200
 
