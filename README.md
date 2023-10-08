@@ -12,7 +12,7 @@ list of these those configuration targets.
 
 ### Vim
 
-```
+```bash
 .vim
 └── autoload
     └── plug.vim
@@ -51,6 +51,15 @@ When a new machine is set up, the profiles can also be loaded in with `dconf`:
 ```bash
 dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
 ```
+
+### Bash
+
+```bash
+.bash_aliases
+.bash_logout
+.bashrc
+.profile
+``` 
 
 ## License
 
