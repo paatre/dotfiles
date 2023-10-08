@@ -61,6 +61,16 @@ dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
 .profile
 ``` 
 
+### Tmux
+
+```bash
+.tmux.conf
+```
+
+Currently includes only one variable that sets the $TERM as `tmux-256color` for
+shell prompt color support. Normally it would be `screen` which does not include
+the color support.
+
 ## License
 
 Feel free to use any of these files to your liking in your own machines. This
