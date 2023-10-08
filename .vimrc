@@ -1,10 +1,8 @@
-" My own settings
+" My configuration file for Vim. Used defaults.vim as a base and expanded from
+" there.
 "
 " Maintainer:	Teemu Viikeri <teemu.viikeri@haltu.fi>
-" Last change:	2023 Aug 5
-
-" Get the defaults that most users want.
-source $VIMRUNTIME/defaults.vim
+" Last change:	2023 Oct 8
 
 " ==========================
 "
@@ -17,6 +15,28 @@ set nocompatible
 
 " Disable Vim's swap file creation
 set noswapfile
+
+" Keep 200 lines of command line history
+set history=200
+
+" Quite a few people accidentally type "q:" instead of ":q" and get confused
+" by the command line window.  Give a hint about how to get out.
+augroup vimHints
+  au!
+  autocmd CmdwinEnter *
+  \ echohl Todo |
+  \ echo 'You discovered the command-line window! You can close it with ":q".' |
+  \ echohl None
+augroup END
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+" Revert with: ":delcommand DiffOrig".
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+      \ | wincmd p | diffthis
+endif
 
 " ==========================
 "
@@ -36,14 +56,21 @@ set scrolloff=5
 "
 " ===================
 
+" Always show statusline
+set laststatus=2
+
 " Set statusline format
 set statusline=
 " Show full file path
 set statusline+=%F
-set statusline+=\ %l
+" Show line and column number
+set statusline+=\ %l,%c
 
-" Always show statusline
-set laststatus=2
+" Display incomplete commands on the right side of the statusline
+set showcmd
+
+" Display completion matches in a status line
+set wildmenu
 
 " =================
 "
@@ -64,6 +91,9 @@ set incsearch
 "
 " ================================
 
+" Load indentation files: indent.vim
+filetype indent on
+
 " Indenation rules
 set autoindent
 set smartindent
@@ -80,8 +110,16 @@ set shiftwidth=2
 " Put these in an autocmd group, so that we can delete them easily.
 augroup vimrcEx
   au!
-
   " For all text files set 'textwidth' to 78 characters.
   autocmd FileType text setlocal textwidth=78
 augroup END
+
+" ===============
+"
+" Plugin settings
+"
+" ===============
+
+" Load plugin files: ftplugin.vim
+filetype plugin on
 
