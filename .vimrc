@@ -130,8 +130,13 @@ endif
 " Initialize vim-plug
 call plug#begin('~/.vim/plugged')
 
-" Add plugins here
-
+" Gruvbox theme
+Plug 'morhetz/gruvbox'
 
 " End of vim-plug section
 call plug#end()
+
+" Gruvbox
+autocmd vimenter * ++nested colorscheme gruvbox
+set background=dark
+
