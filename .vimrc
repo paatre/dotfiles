@@ -123,3 +123,18 @@ augroup END
 " Load plugin files: ftplugin.vim
 filetype plugin on
 
+" Automatically install vim-plug if not installed yet
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" Initialize vim-plug
+call plug#begin('~/.vim/plugged')
+
+" Add plugins here
+
+
+" End of vim-plug section
+call plug#end()
