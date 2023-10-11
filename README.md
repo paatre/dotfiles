@@ -27,7 +27,50 @@ installed to the machine by calling `:PlugInstall` in Vim.
 
 #### Plugins
 
+Plugins are set between `call plug#begin('~/.vim/plugged')` and `call
+plug#end()` in  `.vimrc`.
+ 
 - [`morhetz/gruvbox`](https://github.com/morhetz/gruvbox)
+- [`vim-airline/vim-airline`](https://github.com/vim-airline/vim-airline)
+- [`tpope/vim-fugitive`](https://github.com/tpope/vim-fugitive)
+
+##### Gruvbox
+
+The Gruvbox plugin is a color theme for Vim.
+
+Gruvbox is configured in a following way:
+
+```bash
+autocmd vimenter * ++nested colorscheme gruvbox
+set background=dark
+``` 
+
+##### Airline
+
+Airline is a statusline plugin.
+
+The most important Airline configuration is this:
+
+```bash
+let g:airline_powerline_fonts = 1
+```
+
+The Airline plugin is using
+[Powerline](https://github.com/powerline/powerline) fonts which make the
+statusline look cool with pointy text containers etc.
+
+What needs to be noticed is that for the Powerline fonts to actually work the
+Powerline fonts need to installed first. This should be done via cloning the
+[Powerline fonts repository](https://github.com/powerline/fonts) and running
+the installation script `./install.sh`. After this, the font can be changed
+from the Gnome Terminal preferences for the used profile. Depending on the
+fonts and the computer, some fonts work better with the Powerline than others.
+
+##### Fugitive
+
+A Vim wrapper for Vim. Needed this one for getting helpful branch info from a
+current directory if in a Git repository. No need for extra configuration at
+the moment.
 
 ### Gnome Terminal
 
