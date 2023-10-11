@@ -53,21 +53,14 @@ set scrolloff=5
 "
 " ===================
 
-" Always show statusline
-set laststatus=2
-
-" Set statusline format
-set statusline=
-" Show full file path
-set statusline+=%F
-" Show line and column number
-set statusline+=\ %l,%c
-
-" Display incomplete commands on the right side of the statusline
+" Display incomplete commands on the right side of the command line
 set showcmd
 
 " Display completion matches in a status line
 set wildmenu
+
+" Don't show mode indicator at command line, Airline handles that
+set noshowmode
 
 " =================
 "
@@ -133,10 +126,25 @@ call plug#begin('~/.vim/plugged')
 " Gruvbox theme
 Plug 'morhetz/gruvbox'
 
+" Airline statusline
+Plug 'vim-airline/vim-airline'
+
+" Fugitive
+Plug 'tpope/vim-fugitive'
+
 " End of vim-plug section
 call plug#end()
 
 " Gruvbox
 autocmd vimenter * ++nested colorscheme gruvbox
 set background=dark
+
+" Airline
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.space = "\ua0"
+let g:airline_section_c = "%F"
+let g:airline#extensions#hunks#enabled = 1
 
