@@ -14,10 +14,19 @@ list of these those configuration targets.
 
 ```bash
 .vim
+├── after
+│   └── ftplugin
+│       ├── markdown.vim
+│       └── vim.vim
 └── autoload
     └── plug.vim
 .vimrc
 ```
+
+Notice how we have `.vim/after/` directory which handles overriding of
+ftplugins in the source code. Without the directory and its `ftplugin` files,
+autoformatting wouldn't work because rules of the formatting is overriden, for
+example, in the `/usr/share/vim82/ftplugin/vim.vim` file.
 
 The Vim setup uses [vim-plug](https://github.com/junegunn/vim-plug) plugin
 manager. My current machine includes a plugin directory in `~/.vim/plugged`
