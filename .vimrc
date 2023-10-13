@@ -101,7 +101,7 @@ set shiftwidth=2
 augroup vimrcEx
   au!
   " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
+  autocmd FileType * setlocal textwidth=78
 augroup END
 
 " ===============
@@ -109,9 +109,6 @@ augroup END
 " Plugin settings
 "
 " ===============
-
-" Load plugin files: ftplugin.vim
-filetype plugin on
 
 " Automatically install vim-plug if not installed yet
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
