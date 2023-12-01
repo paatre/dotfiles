@@ -127,6 +127,13 @@ shopt -s globstar
 # Less settings
 #
 
-# make less more friendly for non-text input files, see lesspipe(1)
+# Make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+#
+# ZFZ settings
+#
+
+# Let ZFZ to find hidden files as well by default
+# export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -l -g ""'
 

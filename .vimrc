@@ -47,6 +47,9 @@ set backspace=indent,eol,start
 " Show a few lines of context around the cursor
 set scrolloff=5
 
+" Highlight current line cursor line
+set cursorline
+
 " ===================
 "
 " Statusline settings
@@ -81,7 +84,7 @@ set incsearch
 "
 " ================================
 
-" Load indentation files: indent.vim
+"Load indentation files: indent.vim
 filetype indent on
 
 " Indenation rules
@@ -101,8 +104,26 @@ set shiftwidth=2
 augroup vimrcEx
   au!
   " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType * setlocal textwidth=78
+  autocmd FileType * if &filetype != 'markdown' | setlocal textwidth=78 | endif
 augroup END
+
+" =============
+"
+" Remaps
+"
+" =============
+
+" Set mapleader to ,
+let mapleader = ","
+
+" Map ,cn to :cnext
+nnoremap <leader>cn :cnext<Cr>
+
+" Map ,cp to :cprev
+nnoremap <leader>cp :cprev<Cr>
+
+" Map Ctrl+P to fuzzy file finder
+nnoremap <C-p> :Files<Cr>
 
 " ===============
 "
@@ -129,6 +150,10 @@ Plug 'vim-airline/vim-airline'
 " Fugitive
 Plug 'tpope/vim-fugitive'
 
+" Fuzzy file finder
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
 " End of vim-plug section
 call plug#end()
 
@@ -144,4 +169,7 @@ endif
 let g:airline_symbols.space = "\ua0"
 let g:airline_section_c = "%F"
 let g:airline#extensions#hunks#enabled = 1
+
+" FZF
+" let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
