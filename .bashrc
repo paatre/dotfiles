@@ -14,7 +14,7 @@ esac
 
 # PATH
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/scripts:$PATH" # symlink to ~/dotfiles/script
+export PATH="$HOME/scripts:$PATH" # symlink to ~/dotfiles/scripts
 
 #
 # Shell prompt settings
