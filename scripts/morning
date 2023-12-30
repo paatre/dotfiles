@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+
+xml=$(curl -sSL "https://www.lipsum.com/feed/xml")
+lipsum=$(echo "$xml" | xmllint --xpath 'string(/feed/lipsum)' -)
+sentence_lat=$(echo "$lipsum" | sed 's/\([.!?]\) /\1\n/g' | sed -n '2p')
+target_lang="fi"
+translate_json=$(jq -n \
+                    --arg q "$sentence_lat" \
+                    --arg target "$target_lang" \
+                    '{q: $q, target: $target}')
+response_json=$(curl -sSL -X POST \
+    -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+    -H "x-goog-user-project: teemun-aamutoivotus" \
+    -H "Content-Type: application/json; charset=utf-8" \
+    -d "$translate_json" \
+    "https://translation.googleapis.com/language/translate/v2")
+translated_sentence=$(echo "$response_json" | jq -r '.data.translations[0].translatedText')
+slack_message=$(jq -n \
+                    --arg sentence_lat "$sentence_lat" \
+                    --arg translated_sentence "$translated_sentence" \
+                    '{"text": ($sentence_lat + "\n" + $translated_sentence)}')
+webhook_url=$(pass show slack/webhook_url)
+curl -sSL -X POST -H 'Content-type: application/json' --data "$slack_message" "$webhook_url" >/dev/null
+
