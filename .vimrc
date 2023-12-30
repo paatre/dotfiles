@@ -109,13 +109,6 @@ set tabstop=2
 " Sets the number of spaces to use when indenting
 set shiftwidth=2
 
-" Put these in an autocmd group, so that we can delete them easily.
-augroup vimrcEx
-  au!
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType * if &filetype != 'markdown' | setlocal textwidth=78 | endif
-augroup END
-
 " =============
 "
 " Remaps
