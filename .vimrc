@@ -1,9 +1,3 @@
-" My configuration file for Vim. Used defaults.vim as a base and expanded from
-" there.
-"
-" Maintainer:	Teemu Viikeri <teemu.viikeri@haltu.fi>
-" Last change:	2023 Oct 8
-
 " ==========================
 "
 " Application level settings
@@ -17,7 +11,7 @@ set nocompatible
 set history=200
 
 " Disable history file creation for netrw
-:let g:netrw_dirhistmax = 0
+let g:netrw_dirhistmax = 0
 
 " Quite a few people accidentally type "q:" instead of ":q" and get confused
 " by the command line window.  Give a hint about how to get out.
