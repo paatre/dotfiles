@@ -1,0 +1,11 @@
+[user]
+  name = Teemu Viikeri
+  email = teemu.viikeri@haltu.fi
+[init]
+	defaultBranch = main
+[core]
+  editor = vim
+[alias]
+  amendpush = "!f() { git add \"$1\" && git commit --amend --no-edit && git push -f; }; f"
+  st = status
+  sw = switch
