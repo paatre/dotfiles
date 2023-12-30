@@ -42,6 +42,7 @@ plug#end()` in  `.vimrc`.
 - [`morhetz/gruvbox`](https://github.com/morhetz/gruvbox)
 - [`vim-airline/vim-airline`](https://github.com/vim-airline/vim-airline)
 - [`tpope/vim-fugitive`](https://github.com/tpope/vim-fugitive)
+- [`junegunn/fzf.vim`](junegunn/fzf.vim)
 
 ##### Gruvbox
 
@@ -80,6 +81,11 @@ fonts and the computer, some fonts work better with the Powerline than others.
 A Vim wrapper for Vim. Needed this one for getting helpful branch info from a
 current directory if in a Git repository. No need for extra configuration at
 the moment.
+
+##### Fzf
+
+Fzf.vim is a fuzzy file finder. This plugin works as a wrapper for the `fzf`
+command-line tool.
 
 ### Gnome Terminal
 
