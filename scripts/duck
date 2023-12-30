@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Script Name: duck
+# Original Author: Rob Muhlestein
+# Source: https://github.com/rwxrob/dot/blob/main/scripts/duck
+# Licensed under Mozilla Public License Version 2.0 (https://www.mozilla.org/en-US/MPL/2.0/)
+
+url="https://lite.duckduckgo.com/lite?kd=-1&kp=-1&q=$(urlencode "$*")" # 🦆
+exec lynx "$url"
