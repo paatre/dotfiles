@@ -16,6 +16,9 @@ set nocompatible
 " Keep 200 lines of command line history
 set history=200
 
+" Disable history file creation for netrw
+:let g:netrw_dirhistmax = 0
+
 " Quite a few people accidentally type "q:" instead of ":q" and get confused
 " by the command line window.  Give a hint about how to get out.
 augroup vimHints
