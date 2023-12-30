@@ -65,6 +65,15 @@ set wildmenu
 " Don't show mode indicator at command line, Airline handles that
 set noshowmode
 
+" ================
+"
+" Folding settings
+"
+" ================
+
+" Enable markdown folding from ft-markdown-plugin
+let g:markdown_folding = 1
+
 " =================
 "
 " Highligh settings
