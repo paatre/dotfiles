@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+urldecode() {
+    local encoded=${1//+/ }
+    printf '%b' "${encoded//%/\\x}"
+}
+
+if test -n "$1"; then
+    urlencode "$*"
+    exit 1
+fi
+
+IFS=
+while read -r line; do
+    urldecode "$line"
+done
+
