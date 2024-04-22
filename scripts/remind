@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Default values for notification
+TITLE="${1:-Hour Submission Reminder}"         # Default title if none provided
+MESSAGE="${2:-Please submit your completed tasks or start a new task.}"  # Default message if none provided
+ICON="${3:-dialog-information}"  # Default icon, change to suitable one or pass in script
+
+# Start time for tracking duration
+start_time=$(date +%s)
+
+# Target end time (adjust as needed)
+total_seconds=$((start_time + 8 * 3600))  # 8 hours in seconds
+
+# Send the first notification immediately
+notify-send -i "$ICON" "$TITLE" "$MESSAGE"
+
+# Loop until target time is reached
+while [[ $(date +%s) -lt $total_seconds ]]; do
+  sleep 15m
+  notify-send -i "$ICON" "$TITLE" "$MESSAGE"
+done
