@@ -91,6 +91,7 @@ alias '??'=google
 
 alias c=clear
 
+alias ai='ollama run llama3.1'
 #
 # Tab completion settings
 #
