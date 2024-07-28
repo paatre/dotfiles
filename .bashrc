@@ -89,6 +89,8 @@ alias cal="if [ -t 1 ] ; then ncal -b ; else /usr/bin/cal ; fi"
 alias '?'=duck
 alias '??'=google
 
+alias c=clear
+
 #
 # Tab completion settings
 #
