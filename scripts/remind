@@ -5,17 +5,26 @@ TITLE="${1:-Hour Submission Reminder}"         # Default title if none provided
 MESSAGE="${2:-Please submit your completed tasks or start a new task.}"  # Default message if none provided
 ICON="${3:-dialog-information}"  # Default icon, change to suitable one or pass in script
 
-# Start time for tracking duration
-start_time=$(date +%s)
-
-# Target end time (adjust as needed)
-total_seconds=$((start_time + 8 * 3600))  # 8 hours in seconds
-
 # Send the first notification immediately
 notify-send -i "$ICON" "$TITLE" "$MESSAGE"
 
-# Loop until target time is reached
-while [[ $(date +%s) -lt $total_seconds ]]; do
-  sleep 15m
+# Loop until 8 hours have passed
+while true; do
+  # Calculate the next quarter hour
+  current_time=$(date +%s)
+  next_quarter=$(( (current_time / 900 + 1) * 900 ))
+
+  # Calculate sleep duration to align notifications with quarter-hour marks
+  sleep_duration=$((next_quarter - current_time))
+
+  # Exit loop if total duration exceeds 8 hours
+  if [ $sleep_duration -gt $((8 * 3600)) ]; then
+    break
+  fi
+
+  # Sleep until the next quarter hour
+  sleep $sleep_duration
+
+  # Send notification
   notify-send -i "$ICON" "$TITLE" "$MESSAGE"
 done
