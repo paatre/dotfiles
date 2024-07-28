@@ -33,6 +33,8 @@ git filter-repo --force --refs $BRANCH --commit-callback "
 def update_author_email(c):
     c.author_name = b'$NEW_AUTHOR_NAME'
     c.author_email = b'$NEW_AUTHOR_EMAIL'
+    c.committer_name = b'$NEW_AUTHOR_NAME'
+    c.committer_email = b'$NEW_AUTHOR_EMAIL'
 update_author_email(commit)
 "
 
