@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Check if git-filter-repo is installed
+if ! git filter-repo --version &> /dev/null
+then
+    echo "git-filter-repo is not installed. Please install it before running this script."
+    exit 1
+fi
+
+# Check for proper usage
+if [ "$#" -ne 3 ]; then
+    echo "Usage: rewrite-author <branch> <new-author-name> <new-author-email>"
+    exit 1
+fi
+
+# Assign command line arguments to variables
+BRANCH=$1
+NEW_AUTHOR_NAME=$2
+NEW_AUTHOR_EMAIL=$3
+
+# Confirm the operation
+echo "This will forcefully rewrite the author information for all commits in branch '$BRANCH'."
+read -p "Are you sure you want to continue? This operation is irreversible and should be done on a repository clone. (y/n) " -n 1 -r
+echo    # move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    echo "Operation cancelled."
+    exit 1
+fi
+
+# Perform the author rewrite forcefully
+git filter-repo --force --refs $BRANCH --commit-callback "
+def update_author_email(c):
+    c.author_name = b'$NEW_AUTHOR_NAME'
+    c.author_email = b'$NEW_AUTHOR_EMAIL'
+update_author_email(commit)
+"
+
+echo "Author information forcefully updated for all commits in branch '$BRANCH'."
+
