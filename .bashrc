@@ -151,6 +151,7 @@ shopt -s globstar
 #
 # ZFZ settings
 #
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Let ZFZ to find hidden files as well by default
 # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -l -g ""'
