@@ -7,6 +7,7 @@
 .config/discord/
 .config/eog/
 .config/evince/
+.config/evolution/
 .config/flutter/
 .config/gcloud/
 .config/gedit/
@@ -17,6 +18,7 @@
 .config/goa-1.0/
 .config/Google/AndroidStudio*/
 .config/google-chrome/
+.config/.gsd-keyboard.settings-ported
 .config/gtk-*/
 .config/ibus/
 .config/[kK]eybase/
