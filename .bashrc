@@ -167,6 +167,11 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 #
+# Node and NPM settings
+#
+export NODE_REPL_HISTORY=""
+
+#
 # Starship settings
 #
 eval "$(starship init bash)"
