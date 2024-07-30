@@ -1,1 +1,34 @@
-.vim/plugged
+.config/Android Open Source Project/
+.config/cef_user_data/
+.config/chromium/
+.config/cni/
+.config/Code/
+.config/Dharkael/
+.config/discord/
+.config/eog/
+.config/evince/
+.config/flutter/
+.config/gcloud/
+.config/gedit/
+.config/GIMP/
+.config/github-copilot/
+.config/gnome-initial-setup-done
+.config/GNOME-xdg-terminals.list
+.config/goa-1.0/
+.config/Google/AndroidStudio*/
+.config/google-chrome/
+.config/gtk-*/
+.config/ibus/
+.config/[kK]eybase/
+.config/menus/
+.config/monitors.xml
+.config/Mullvad VPN/
+.config/nautilus/
+.config/pgadmin*/
+.config/pulse/
+.config/Slack/
+.config/totem/
+.config/ubuntu-xdg-terminals.list
+.config/VirtualBox/
+.config/xdg-terminals.list
+.vim/plugged/

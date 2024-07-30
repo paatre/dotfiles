@@ -1,0 +1,18 @@
+[Default Applications]
+text/html=firefox_firefox.desktop
+x-scheme-handler/http=firefox_firefox.desktop
+x-scheme-handler/https=firefox_firefox.desktop
+x-scheme-handler/about=google-chrome.desktop
+x-scheme-handler/unknown=google-chrome.desktop
+x-scheme-handler/webcal=google-chrome.desktop
+application/xhtml+xml=firefox_firefox.desktop
+
+[Added Associations]
+application/vnd.android.package-archive=code_code.desktop;
+x-scheme-handler/http=firefox-trunk.desktop;firefox_firefox.desktop;
+text/html=firefox-trunk.desktop;firefox_firefox.desktop;
+application/xhtml+xml=firefox-trunk.desktop;firefox_firefox.desktop;
+x-scheme-handler/https=firefox-trunk.desktop;firefox_firefox.desktop;
+text/plain=code_code.desktop;
+text/markdown=code_code.desktop;
+application/xml=firefox.desktop;
