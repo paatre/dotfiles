@@ -148,6 +148,9 @@ shopt -s globstar
 # Make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+# Don't create a .lesshst file to $HOME
+export LESSHISTFILE="-"
+
 #
 # ZFZ settings
 #
