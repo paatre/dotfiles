@@ -874,13 +874,13 @@ require('lazy').setup({
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
   },
-  {
+  { -- HTML emmet snippets
     'olrtg/nvim-emmet',
     config = function()
       vim.keymap.set({ 'n', 'v' }, '<leader>xe', require('nvim-emmet').wrap_with_abbreviation)
     end,
   },
-  {
+  { -- Sensible keybindings for navigating between Tmux and Neovim
     'christoomey/vim-tmux-navigator',
     cmd = {
       'TmuxNavigateLeft',
