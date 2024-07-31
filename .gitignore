@@ -5,6 +5,7 @@
 .config/Code/
 .config/Dharkael/
 .config/discord/
+.config/dconf/
 .config/eog/
 .config/evince/
 .config/evolution/
@@ -31,6 +32,8 @@
 .config/Slack/
 .config/totem/
 .config/ubuntu-xdg-terminals.list
+.config/user-dirs.dirs
+.config/user-dirs.locale
 .config/VirtualBox/
 .config/xdg-terminals.list
 .vim/plugged/
