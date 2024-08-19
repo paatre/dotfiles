@@ -570,13 +570,13 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
         djlint = {},
         emmet_ls = {
           filetypes = {
             'html',
           },
         },
+        gopls = {},
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -591,9 +591,8 @@ require('lazy').setup({
             },
           },
         },
-      }
-      pyright =
-        {},
+        pyright = {},
+        tsserver = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -601,7 +600,6 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
         --
         -- Ensure the servers and tools above are installed
         --  To check the current status of installed tools and/or manually install
@@ -609,7 +607,9 @@ require('lazy').setup({
         --    :Mason
         --
         --  You can press `g?` for help in this menu.
-        require('mason').setup()
+      }
+
+      require('mason').setup()
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
@@ -802,6 +802,25 @@ require('lazy').setup({
     end,
   },
 
+  { -- Dashboard for Neovim's start screen
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        theme = 'hyper',
+        config = {
+          week_header = {
+            enable = true,
+          },
+          disable_move = true,
+          packages = { enable = false },
+        },
+        shortcut_type = 'number',
+      }
+    end,
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
+  },
+
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -904,6 +923,20 @@ require('lazy').setup({
     build = function()
       vim.fn['mkdp#util#install']()
     end,
+  },
+  { -- File tree plugin
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('nvim-tree').setup {}
+    end,
+  },
+  { -- GitHub Copilot
+    'github/copilot.vim',
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
