@@ -814,6 +814,7 @@ require('lazy').setup({
           },
           disable_move = true,
           packages = { enable = false },
+          shortcut = {},
         },
         shortcut_type = 'number',
       }
