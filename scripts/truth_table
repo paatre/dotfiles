@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Function to perform bitwise operations and print the truth table
+bitwise_operation() {
+  local dec1=$1
+  local dec2=$2
+  local operation=$3
+  local result
+
+  # Perform the specified bitwise operation
+  case $operation in
+    AND)
+      result=$((dec1 & dec2))
+      ;;
+    OR)
+      result=$((dec1 | dec2))
+      ;;
+    XOR)
+      result=$((dec1 ^ dec2))
+      ;;
+    *)
+      echo "Invalid operation"
+      exit 1
+      ;;
+  esac
+
+  # Convert the result back to binary
+  bin1=$(dectobin $dec1)
+  bin2=$(dectobin $dec2)
+  bin_result=$(dectobin $result)
+
+  # Print the formatted table row
+  printf "| %08d  | %08d  | %08d  |\n" "$(($bin1))" "$(($bin2))" "$(($bin_result))"
+}
+
+# Main function to generate the truth table
+generate_truth_table() {
+  local num1=$1
+  local num2=$2
+  local operation=$3
+
+  echo ""
+  echo "|-----------|-----------|-----------|"
+  echo "| Decimal 1 | Decimal 2 | Operation |"
+  echo "|-----------|-----------|-----------|"
+
+  bin1=$(dectobin $num1)
+  bin2=$(dectobin $num2)
+
+  printf "| %-9d | %-9d | %-9s |\n" "$num1" "$num2" "$operation"
+  echo "|-----------|-----------|-----------|"
+
+  bitwise_operation "$num1" "$num2" "$operation"
+
+  echo "|-----------|-----------|-----------|"
+}
+
+# Function to check if a number is between 0 and 255
+is_valid_number() {
+  local num=$1
+  if [[ $num -ge 0 && $num -le 255 ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# Check if the correct number of arguments is provided
+if [ "$#" -ne 3 ]; then
+  echo "Usage: $0 <num1> <num2> <operation>"
+  echo "Example: $0 7 6 AND"
+  exit 1
+fi
+
+# Validate the number arguments
+if ! is_valid_number "$1" || ! is_valid_number "$2"; then
+  echo "Error: Both numbers must be between 0 and 255."
+  exit 1
+fi
+
+# Call the main function with the user-provided arguments
+generate_truth_table "$1" "$2" "$3"
+

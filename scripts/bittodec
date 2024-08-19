@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Function to validate input
+validate_input() {
+    local binary=$1
+    if [[ ! $binary =~ ^[01]{1,8}$ ]]; then
+        echo "Error: Input must be a binary number of no more than 8 bits."
+        exit 1
+    fi
+}
+
+# Function to convert binary to decimal
+binary_to_decimal() {
+    local binary=$1
+    echo $((2#$binary))
+}
+
+# Check if an argument was provided
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <binary_number>"
+    exit 1
+fi
+
+# Validate input
+binary=$1
+validate_input "$binary"
+
+# Convert and display the result
+binary_to_decimal "$binary"

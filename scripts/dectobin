@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Function to convert decimal to binary
+dec_to_bin() {
+  local dec=$1
+  echo "obase=2;$dec" | bc
+}
+
+# Check if the correct number of arguments is provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <decimal_number>"
+  exit 1
+fi
+
+# Call the function with the user-provided argument
+dec_to_bin "$1"

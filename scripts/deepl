@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Check if the input parameter is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 \"text to translate\""
+  exit 1
+fi
+
+# Text to translate
+text="$1"
+
+# Target language (you can change this to any language supported by DeepL)
+target_lang="FI"
+
+# DeepL API key
+api_key="$(pass show api_keys/deepl)"
+
+# DeepL API endpoint
+api_url="https://api-free.deepl.com/v2/translate"
+
+# Make the API request and store the response
+response=$(curl -s -X POST "$api_url" \
+  --header "Authorization: DeepL-Auth-Key $api_key" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "text": ["'"$text"'"],
+    "target_lang": "'"$target_lang"'"
+  }')
+
+# Extract the translated text from the response
+translated_text=$(echo "$response" | jq -r '.translations[0].text')
+
+# Output the translated text
+echo "$translated_text"
+
