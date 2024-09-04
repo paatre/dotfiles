@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Check if at least one argument (image) is passed
+if [ "$#" -lt 1 ]; then
+  echo "Usage: $0 <image1> <image2> ... <imageN>"
+  exit 1
+fi
+
+# Create a temporary file to store the results
+temp_file=$(mktemp)
+
+# Variables to store the maximum lengths of the image name and size
+max_image_length=0
+max_size_length=0
+
+# Loop through the passed image arguments
+for image in "$@"; do
+  echo "Pulling $image..."
+
+  # Suppress the output of the docker pull command
+  docker pull "$image" > /dev/null 2>&1
+  
+  # Get the image size
+  image_size=$(docker images "$image" --format "{{.Size}}")
+
+  # Check if this image name or size is the longest
+  if [ ${#image} -gt $max_image_length ]; then
+    max_image_length=${#image}
+  fi
+  if [ ${#image_size} -gt $max_size_length ]; then
+    max_size_length=${#image_size}
+  fi
+
+  # Append the results to the temp file for printing at the end
+  echo "$image,$image_size" >> "$temp_file"
+
+  # Remove the image and suppress the output
+  docker rmi "$image" > /dev/null 2>&1
+done
+
+# Print the table headers
+echo ""
+printf "╔%s╦%s╗\n" "$(printf '═%.0s' $(seq 1 $((max_image_length + 2))))" "$(printf '═%.0s' $(seq 1 $((max_size_length + 2))))"
+printf "║ %-*s║ %-*s║\n" "$((max_image_length + 1))" "IMAGE" "$((max_size_length + 1))" "SIZE"
+printf "╠%s╬%s╣\n" "$(printf '═%.0s' $(seq 1 $((max_image_length + 2))))" "$(printf '═%.0s' $(seq 1 $((max_size_length + 2))))"
+
+# Read from the temp file and print the results with dynamic formatting
+while IFS=, read -r image size; do
+  printf "║ %-*s ║ %-*s ║\n" "$max_image_length" "$image" "$max_size_length" "$size"
+done < "$temp_file"
+
+# Print the table footer
+printf "╚%s╩%s╝\n" "$(printf '═%.0s' $(seq 1 $((max_image_length + 2))))" "$(printf '═%.0s' $(seq 1 $((max_size_length + 2))))"
+
+# Clean up
+rm "$temp_file"
