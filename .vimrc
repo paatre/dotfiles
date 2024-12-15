@@ -143,9 +143,6 @@ call plug#begin('~/.vim/plugged')
 " Gruvbox theme
 Plug 'morhetz/gruvbox'
 
-" Airline statusline
-Plug 'vim-airline/vim-airline'
-
 " Fugitive
 Plug 'tpope/vim-fugitive'
 
@@ -157,9 +154,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 
-" ALE
-Plug 'dense-analysis/ale'
-
 " GitHub Copilot
 Plug 'github/copilot.vim'
 
@@ -169,27 +163,3 @@ call plug#end()
 " Gruvbox
 autocmd vimenter * ++nested colorscheme gruvbox
 set background=dark
-
-" Airline
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-let g:airline_symbols.space = "\ua0"
-let g:airline_section_c = "%F"
-let g:airline#extensions#hunks#enabled = 1
-
-" ALE
-let g:ale_enabled = 1
-let g:ale_fix_on_save = 1
-let g:ale_fixers = {
-\   'python': ['black', 'isort']
-\}
-let g:ale_lint_on_text_changed = 'always'
-let g:ale_lint_on_insert_leave = 1
-let g:ale_linters = {
-\   'python': ['pylint'],
-\   'javascript': ['eslint']
-\}
-let g:ale_python_pylint_options = '
-      \ --load-plugins=pylint_django'
