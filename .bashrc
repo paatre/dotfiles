@@ -14,6 +14,7 @@ esac
 
 # PATH
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:/usr/local/go/bin" # Go binary
 export PATH="$HOME/scripts:$PATH" # symlink to ~/dotfiles/scripts
 
 #
