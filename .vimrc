@@ -45,7 +45,7 @@ set backspace=indent,eol,start
 set scrolloff=5
 
 " Highlight current line cursor line
-set cursorline
+set nocursorline
 
 " ===================
 "
