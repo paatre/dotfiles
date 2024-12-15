@@ -1,0 +1,193 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------------
+# Script Name: docker-tmux-setup.sh
+#
+# Description:
+#   This script automates the setup of a local Docker development environment
+#   within a tmux session. It splits the tmux window into multiple panes, each
+#   running specific commands to streamline the development workflow. The script
+#   supports an optional Vite development server pane for frontend builds.
+#
+# Features:
+#   - Initializes Docker Compose with a specified service (defaults to runserver).
+#   - Optionally includes a Vite development server pane.
+#   - Provides an interactive shell to the specified service container with a pre-activated Python virtual environment.
+#   - Opens the user-specified command-line editor in the left pane for code editing.
+#
+# Usage:
+#   ./docker-tmux-setup.sh [OPTIONS]
+#
+# Options:
+#   -s, --service NAME    Specify the Docker service name (default: runserver)
+#   -v, --vite            Include Vite development server pane (default: false)
+#   -e, --editor EDITOR   Specify the editor to use (default: \$EDITOR)
+#   -h, --help            Display this help message
+#
+# Requirements:
+#   - tmux must be installed and running.
+#   - Docker and Docker Compose must be installed.
+#   - The script should be executed within an existing tmux session.
+#
+# Examples:
+#   # Use default service name without Vite pane
+#   ./docker-tmux-setup.sh
+#
+#   # Specify a custom service name
+#   ./docker-tmux-setup.sh --service myservice
+#
+#   # Specify a custom editor (e.g., vim)
+#   ./docker-tmux-setup.sh --editor vim
+#
+#   # Include the Vite development server pane
+#   ./docker-tmux-setup.sh --vite
+#
+#   # Combine options
+#   ./docker-tmux-setup.sh -s myservice -v -e vim
+#
+# -----------------------------------------------------------------------------
+
+# Usage function to display help
+usage() {
+    echo "Usage: $0 [-s service_name] [--vite|-v]"
+    echo
+    echo "Options:"
+    echo "  -s, --service    Specify the Docker service name (default: runserver)"
+    echo "  -v, --vite       Include Vite development server pane"
+    echo "  -e, --editor     Specify the editor to use (default: \$EDITOR)"
+    echo "  -h, --help       Display this help message"
+    exit 1
+}
+
+# Default values
+SERVICE_NAME="runserver"
+INCLUDE_VITE=false
+EDITOR_CMD=""  # Will be determined below
+
+# Check if the editor is set in the environment variable and it's executable
+validate_editor() {
+    if [[ -z "$1" ]]; then
+        echo "Error: No editor specified. Please provide an editor using -e or --editor, or set the \$EDITOR environment variable."
+        exit 1
+    fi
+
+    if ! command -v "$1" &>/dev/null; then
+        echo "Error: Specified editor '$1' is not installed or not in PATH."
+        exit 1
+    fi
+}
+# Parse command-line arguments
+while [[ "$#" -gt 0 ]]; do # $# expands to the number of positional arguments
+    case $1 in
+        -s|--service)
+            if [[ -n "$2" && ! "$2" =~ ^- ]]; then
+                SERVICE_NAME="$2"
+                shift
+            else
+                echo "Error: --service requires a non-empty option argument."
+                exit 1
+            fi
+            ;;
+        -v|--vite)
+            INCLUDE_VITE=true
+            ;;
+        -e|--editor)
+            if [[ -n "$2" && ! "$2" =~ ^- ]]; then
+                EDITOR_CMD="$2"
+                shift
+            else
+                echo "Error: --editor requires a non-empty option argument."
+                exit 1
+            fi
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            echo "Unknown option: $1"
+            usage
+            ;;
+    esac
+    shift
+done
+
+# Determine the editor if not specified via command-line
+if [[ -z "$EDITOR_CMD" ]]; then
+    if [[ -n "$EDITOR" ]]; then
+        EDITOR_CMD="$EDITOR"
+    else
+        echo "Error: No editor specified. Please provide an editor using -e or --editor, or set the \$EDITOR environment variable."
+        exit 1
+    fi
+fi
+ 
+# Validate the specified editor
+validate_editor "$EDITOR_CMD"
+
+# Ensure TMUX is running
+if [ -z "$TMUX" ]; then
+    echo "This script must be run inside a tmux session."
+    exit 1
+fi
+
+# Function to wait for a container to be ready
+wait_for_container() {
+    echo "Waiting for container: $SERVICE_NAME"
+    while ! docker compose exec "$SERVICE_NAME" echo "ready" &>/dev/null; do
+        sleep 1
+    done
+}
+
+# Docker compose up
+tmux split-window -h
+# Run tmux send-keys "docker compose build" C-m if you need to rebuild the images, usually ran once after a fresh clone
+tmux send-keys "docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_plumeria.py ; cp -n local_settings.py.tpl_dev local_settings.py'; docker compose up" C-m
+
+# Wait for the the container to be ready
+wait_for_container "$SERVICE_NAME"
+
+if [ "$INCLUDE_VITE" = true ]; then
+    # Vite dev server
+    vite_pane=$(tmux split-window -v -P)
+    tmux send-keys "docker compose exec $SERVICE_NAME bash" C-m
+    tmux send-keys "npm start" C-m
+fi
+
+# Interactive shell to the container
+tmux split-window -v
+tmux send-keys "docker compose exec $SERVICE_NAME bash" C-m
+tmux send-keys "source ../.venv/bin/activate" C-m
+tmux send-keys "clear" C-m
+
+# Resize panes on the right
+window_height=$(tmux display -p "#{window_height}")
+
+if [ "$INCLUDE_VITE" = true ]; then
+    # Calculate height for 3 panes
+    new_height=$((window_height / 3))
+
+    # Resize the Vite pane
+    tmux resize-pane -t "$vite_pane" -y "$new_height"
+
+    # Select the pane below and resize
+    tmux select-pane -D
+    tmux resize-pane -y "$new_height"
+
+    # Select the next pane below and resize
+    tmux select-pane -D
+    tmux resize-pane -y "$new_height"
+else
+    # Calculate height for 2 panes
+    new_height=$((window_height / 2))
+
+    # Resize the existing pane
+    tmux resize-pane -y "$new_height"
+
+    # Select the pane below and resize
+    tmux select-pane -D
+    tmux resize-pane -y "$new_height"
+fi
+
+# Nvim in the left half
+tmux select-pane -L
+tmux send-keys "$EDITOR_CMD ." C-m
