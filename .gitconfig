@@ -5,7 +5,10 @@
   defaultBranch = main
 [core]
   editor = nvim
+  attributesFile = /home/tiikeri/dotfiles/.gitattributes
 [alias]
   amendpush = "!f() { git add \"$1\" && git commit --amend --no-edit && git push -f; }; f"
   st = status
   sw = switch
+[diff "python"]
+  xfuncname = ^[ \\t]*def[ \\t]+.*$
