@@ -953,6 +953,24 @@ require('lazy').setup({
   { -- GitHub Copilot
     'github/copilot.vim',
   },
+  -- Testing plugins
+  { -- Coverage gutters
+    'andythigpen/nvim-coverage',
+    dependencies = 'nvim-lua/plenary.nvim',
+    config = function()
+      require('coverage').setup {
+        commands = true,
+        lang = {
+          python = {
+            coverage_file = vim.fn.getcwd() .. '/.coverage',
+            auto_reload = true,
+            coverage_command = 'docker compose exec runserver sh -c "cd /home/bew/bew && /home/bew/.venv/bin/coverage json -o -"',
+            only_open_buffers = false,
+          },
+        },
+      }
+    end,
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
