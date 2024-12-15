@@ -95,6 +95,7 @@ alias '??'=google
 alias c=clear
 
 alias ai='ollama run llama3.1'
+
 #
 # Tab completion settings
 #
@@ -109,6 +110,13 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+#
+# Editor settings
+#
+
+# Set default editor
+export EDITOR=nvim
 
 #
 # History settings
