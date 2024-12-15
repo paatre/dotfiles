@@ -12,5 +12,6 @@
   lo = log --oneline
   st = status
   sw = switch
+  unstage = restore --staged :/
 [diff "python"]
   xfuncname = ^[ \\t]*def[ \\t]+.*$
