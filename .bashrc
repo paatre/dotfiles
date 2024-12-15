@@ -186,6 +186,8 @@ export NODE_REPL_HISTORY=""
 # Starship settings
 #
 eval "$(starship init bash)"
+. "/home/tiikeri/.deno/env"
+
 #
 # Pyenv settings
 #
