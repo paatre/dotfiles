@@ -8,6 +8,7 @@
   attributesFile = /home/tiikeri/dotfiles/.gitattributes
 [alias]
   amendpush = "!f() { git add ${@:-.} && git commit --amend --no-edit && git push -f; }; f"
+  fixup = "!f() { git commit --fixup $1; N=$(($(git rev-list --count $1..HEAD) + 1)); GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash HEAD~$N; }; f"
   st = status
   sw = switch
 [diff "python"]
