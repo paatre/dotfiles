@@ -8,6 +8,7 @@
   attributesFile = /home/tiikeri/dotfiles/.gitattributes
 [alias]
   amendpush = "!f() { git add ${@:-.} && git commit --amend --no-edit && git push -f; }; f"
+  discard = "!git reset --hard HEAD && git clean -di"
   fixup = "!f() { \
     COMMIT=$(git log --oneline | fzf --height 40% --reverse --prompt='Select commit for fixup: ' | awk '{print $1}'); \
     if [ -n \"$COMMIT\" ]; then \
