@@ -98,6 +98,8 @@ alias c=clear
 
 alias ai='ollama run llama3.1'
 
+alias nv='nvim ~/.config/nvim/init.lua'
+
 #
 # Tab completion settings
 #
