@@ -92,6 +92,8 @@ alias cal="if [ -t 1 ] ; then ncal -b ; else /usr/bin/cal ; fi"
 alias '?'=duck
 alias '??'=google
 
+alias dts=docker-tmux-setup
+
 alias c=clear
 
 alias ai='ollama run llama3.1'
