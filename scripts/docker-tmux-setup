@@ -19,10 +19,12 @@
 #   ./docker-tmux-setup.sh [OPTIONS]
 #
 # Options:
-#   -s, --service NAME    Specify the Docker service name (default: runserver)
-#   -v, --vite            Include Vite development server pane (default: false)
-#   -e, --editor EDITOR   Specify the editor to use (default: \$EDITOR)
-#   -h, --help            Display this help message
+#   -b, --build      Rebuild the Docker images"
+#   -e, --editor     Specify the editor to use (default: \$EDITOR)"
+#   -h, --help       Display this help message"
+#   -i, --infra      Specify Haltu infra version"
+#   -s, --service    Specify the Docker service name (default: runserver)"
+#   -v, --vite       Include Vite development server pane"
 #
 # Requirements:
 #   - tmux must be installed and running.
@@ -52,16 +54,19 @@ usage() {
     echo "Usage: $0 [-s service_name] [--vite|-v]"
     echo
     echo "Options:"
-    echo "  -s, --service    Specify the Docker service name (default: runserver)"
-    echo "  -v, --vite       Include Vite development server pane"
+    echo "  -b, --build      Rebuild the Docker images"
     echo "  -e, --editor     Specify the editor to use (default: \$EDITOR)"
     echo "  -h, --help       Display this help message"
+    echo "  -i, --infra      Specify Haltu infra version"
+    echo "  -s, --service    Specify the Docker service name (default: runserver)"
+    echo "  -v, --vite       Include Vite development server pane"
     exit 1
 }
 
 # Default values
 SERVICE_NAME="runserver"
 INCLUDE_VITE=false
+INFRA_VERSION="lilium"
 EDITOR_CMD=""  # Will be determined below
 
 # Check if the editor is set in the environment variable and it's executable
@@ -76,20 +81,12 @@ validate_editor() {
         exit 1
     fi
 }
+
 # Parse command-line arguments
 while [[ "$#" -gt 0 ]]; do # $# expands to the number of positional arguments
     case $1 in
-        -s|--service)
-            if [[ -n "$2" && ! "$2" =~ ^- ]]; then
-                SERVICE_NAME="$2"
-                shift
-            else
-                echo "Error: --service requires a non-empty option argument."
-                exit 1
-            fi
-            ;;
-        -v|--vite)
-            INCLUDE_VITE=true
+        -b|--build)
+            BUILD_CONTAINERS=true
             ;;
         -e|--editor)
             if [[ -n "$2" && ! "$2" =~ ^- ]]; then
@@ -102,6 +99,27 @@ while [[ "$#" -gt 0 ]]; do # $# expands to the number of positional arguments
             ;;
         -h|--help)
             usage
+            ;;
+        -i|--infra)
+            if [[ -n "$2" && ! "$2" =~ ^- ]]; then
+                INFRA_VERSION="$2"
+                shift
+            else
+                echo "Error: --infra requires a non-empty option argument."
+                exit 1
+            fi
+            ;;
+        -s|--service)
+            if [[ -n "$2" && ! "$2" =~ ^- ]]; then
+                SERVICE_NAME="$2"
+                shift
+            else
+                echo "Error: --service requires a non-empty option argument."
+                exit 1
+            fi
+            ;;
+        -v|--vite)
+            INCLUDE_VITE=true
             ;;
         *)
             echo "Unknown option: $1"
@@ -141,7 +159,7 @@ wait_for_container() {
 # Docker compose up
 tmux split-window -h
 # Run tmux send-keys "docker compose build" C-m if you need to rebuild the images, usually ran once after a fresh clone
-tmux send-keys "docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_plumeria.py ; cp -n local_settings.py.tpl_dev local_settings.py'; docker compose up" C-m
+tmux send-keys "docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py ; cp -n local_settings.py.tpl_dev local_settings.py'; docker compose up${BUILD_CONTAINERS:+ --build }"  C-m
 
 # Wait for the the container to be ready
 wait_for_container "$SERVICE_NAME"
