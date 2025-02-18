@@ -9,6 +9,7 @@
 [alias]
   amendpush = "!f() { git add ${@:-.} && git commit --amend --no-edit && git push -f; }; f"
   d = diff
+  delete-merged = "!git branch --merged| egrep -v '(^\\*|master|main|develop)' | xargs git branch -d"
   discard = "!git reset --hard HEAD && git clean -di"
   ds = diff --staged
   fixup = "!f() { \
