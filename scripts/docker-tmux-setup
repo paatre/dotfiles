@@ -159,7 +159,12 @@ wait_for_container() {
 # Docker compose up
 tmux split-window -h
 # Run tmux send-keys "docker compose build" C-m if you need to rebuild the images, usually ran once after a fresh clone
-tmux send-keys "docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py ; cp -n local_settings.py.tpl_dev local_settings.py'; ${BUILD_CONTAINERS:+docker compose pull && }docker compose up${BUILD_CONTAINERS:+ --build}"  C-m
+tmux send-keys \
+    "docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py; \
+    cp -n local_settings.py.tpl_dev local_settings.py'; \
+    ${BUILD_CONTAINERS:+docker pull docker.haltu.net/haltu/env/$INFRA_VERSION:develop && }\
+    docker compose up${BUILD_CONTAINERS:+ --build} --remove-orphans" \
+    C-m
 
 # Wait for the the container to be ready
 wait_for_container "$SERVICE_NAME"
