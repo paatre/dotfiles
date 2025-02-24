@@ -150,8 +150,8 @@ fi
 
 # Function to wait for a container to be ready
 wait_for_container() {
-    echo "Waiting for container: $SERVICE_NAME"
-    while ! docker compose exec "$SERVICE_NAME" echo "ready" &>/dev/null; do
+    echo "Waiting for Django server to run on localhost:8000 in $SERVICE_NAME container"
+    until docker compose exec -T "$SERVICE_NAME" curl -sf http://localhost:8000/ > /dev/null; do
         sleep 1
     done
 }
