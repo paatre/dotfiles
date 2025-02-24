@@ -92,13 +92,22 @@ alias cal="if [ -t 1 ] ; then ncal -b ; else /usr/bin/cal ; fi"
 alias '?'=duck
 alias '??'=google
 
+alias dcps='docker compose ps'
+alias dcup='docker compose up'
+alias dcdown='docker compose down'
+alias dcstop='docker compose stop'
 alias dts=docker-tmux-setup
 
 alias c=clear
 
 alias ai='ollama run llama3.1'
 
+alias dotfiles='cd ~/dotfiles'
+
+alias bashrc='nvim ~/.bashrc'
+alias gitconfig='nvim ~/.gitconfig'
 alias nv='nvim ~/.config/nvim/init.lua'
+alias tmuxconf='nvim ~/.tmux.conf'
 
 #
 # Tab completion settings
