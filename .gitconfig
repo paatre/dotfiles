@@ -34,3 +34,5 @@
   unstage = restore --staged :/
 [diff "python"]
   xfuncname = ^[ \\t]*def[ \\t]+.*$
+[pull]
+  ff = only
