@@ -1,11 +1,3 @@
-[user]
-  name = Teemu Viikeri
-  email = teemu.viikeri@haltu.fi
-[init]
-  defaultBranch = main
-[core]
-  editor = nvim
-  attributesFile = /home/tiikeri/dotfiles/.gitattributes
 [alias]
   amendpush = "!f() { git add ${@:-.} && git commit --amend --no-edit && git push -f; }; f"
   d = diff
@@ -32,7 +24,15 @@
   sw = switch
   undo = reset --soft HEAD^
   unstage = restore --staged :/
+[core]
+  editor = nvim
+  attributesFile = /home/tiikeri/dotfiles/.gitattributes
 [diff "python"]
   xfuncname = ^[ \\t]*def[ \\t]+.*$
+[init]
+  defaultBranch = main
 [pull]
   ff = only
+[user]
+  name = Teemu Viikeri
+  email = teemu.viikeri@haltu.fi
