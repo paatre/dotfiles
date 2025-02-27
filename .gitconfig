@@ -40,6 +40,10 @@
   colorMoved = plain
   mnemonicPrefix = true
   xfuncname = ^[ \\t]*def[ \\t]+.*$
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
 [init]
   defaultBranch = main
 [merge]
