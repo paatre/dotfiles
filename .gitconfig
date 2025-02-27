@@ -43,6 +43,8 @@
   tool = nvimdiff
 [pull]
   ff = only
+[tag]
+  sort = version:refname
 [user]
   name = Teemu Viikeri
   email = teemu.viikeri@haltu.fi
