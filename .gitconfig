@@ -46,6 +46,9 @@
   tool = nvimdiff
 [pull]
   ff = only
+[push]
+  autoSetupRemote = true
+  followTags = true
 [tag]
   sort = version:refname
 [user]
