@@ -39,6 +39,8 @@
   xfuncname = ^[ \\t]*def[ \\t]+.*$
 [init]
   defaultBranch = main
+[merge]
+  tool = nvimdiff
 [pull]
   ff = only
 [user]
