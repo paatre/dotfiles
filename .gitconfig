@@ -25,6 +25,8 @@
   sw = switch
   undo = reset --soft HEAD^
   unstage = restore --staged :/
+[commit]
+  verbose = true
 [core]
   editor = nvim
   attributesFile = /home/tiikeri/dotfiles/.gitattributes
