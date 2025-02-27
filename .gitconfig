@@ -36,6 +36,9 @@
   editor = nvim
   attributesFile = /home/tiikeri/dotfiles/.gitattributes
 [diff "python"]
+  algorithm = histogram
+  colorMoved = plain
+  mnemonicPrefix = true
   xfuncname = ^[ \\t]*def[ \\t]+.*$
 [init]
   defaultBranch = main
