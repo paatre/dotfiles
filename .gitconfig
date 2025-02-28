@@ -9,16 +9,9 @@
   fixup = "!f() { \
     COMMIT=$(git log --oneline | fzf --height 40% --reverse --prompt='Select commit for fixup: ' | awk '{print $1}'); \
     if [ -n \"$COMMIT\" ]; then \
-      if ! git diff --quiet || ! git diff --cached --quiet; then \
-        git stash push -k -u -m 'temp-fixup-stash'; \
-        STASHED=true; \
-      else \
-        STASHED=false; \
-      fi; \
       git commit --fixup $COMMIT; \
       N=$(($(git rev-list --count $COMMIT..HEAD) + 1)); \
       GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash HEAD~$N; \
-      [ \"$STASHED\" = true ] && git stash pop --quiet; \
     fi; \
   }; f"
   lo = log --oneline
@@ -56,6 +49,8 @@
 [push]
   autoSetupRemote = true
   followTags = true
+[rebase]
+  autoStash = true
 [rerere]
   autoUpdate = true
   enabled = true
