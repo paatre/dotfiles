@@ -49,6 +49,7 @@
 [init]
   defaultBranch = main
 [merge]
+  conflictStyle = zdiff3
   tool = nvimdiff
 [pull]
   ff = only
