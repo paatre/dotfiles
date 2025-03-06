@@ -151,17 +151,19 @@ fi
 # Function to wait for a container to be ready
 wait_for_container() {
     echo "Waiting for Django server to run on localhost:8000 in $SERVICE_NAME container"
-    until docker compose exec -T "$SERVICE_NAME" curl -sf http://localhost:8000/ > /dev/null; do
+    until \
+        docker compose exec -T "$SERVICE_NAME" \
+        curl -sf http://localhost:8000/ > \
+        /dev/null 2>&1; \
+    do
         sleep 1
     done
 }
 
 # Docker compose up
 tmux split-window -h
-# Run tmux send-keys "docker compose build" C-m if you need to rebuild the images, usually ran once after a fresh clone
 tmux send-keys \
-    "docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py; \
-    cp -n local_settings.py.tpl_dev local_settings.py'; \
+    "docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py; cp -n local_settings.py.tpl_dev local_settings.py'; \
     ${BUILD_CONTAINERS:+docker pull docker.haltu.net/haltu/env/$INFRA_VERSION:develop && }\
     docker compose up${BUILD_CONTAINERS:+ --build} --remove-orphans" \
     C-m
