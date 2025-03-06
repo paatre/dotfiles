@@ -162,11 +162,22 @@ wait_for_container() {
 
 # Docker compose up
 tmux split-window -h
-tmux send-keys \
-    "docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py; cp -n local_settings.py.tpl_dev local_settings.py'; \
-    ${BUILD_CONTAINERS:+docker pull docker.haltu.net/haltu/env/$INFRA_VERSION:develop && }\
-    docker compose up${BUILD_CONTAINERS:+ --build} --remove-orphans" \
-    C-m
+
+pull_command=""
+if [ "$BUILD_CONTAINERS" = true ]; then
+    pull_command="docker pull docker.haltu.net/haltu/env/$INFRA_VERSION:develop && "
+fi
+
+up_command="docker compose up"
+if [ "$BUILD_CONTAINERS" = true ]; then
+    up_command+=" --build"
+fi
+up_command+=" --remove-orphans"
+
+full_command="${pull_command}${up_command}"
+
+# Send the full command to tmux
+tmux send-keys "$full_command" C-m
 
 # Wait for the the container to be ready
 wait_for_container "$SERVICE_NAME"
