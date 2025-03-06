@@ -26,8 +26,12 @@
 [commit]
   verbose = true
 [core]
-  editor = nvim
   attributesFile = /home/tiikeri/dotfiles/.gitattributes
+  editor = nvim
+  pager = delta
+[delta]
+  dark = true
+  navigate = true
 [diff "python"]
   algorithm = histogram
   colorMoved = plain
@@ -41,6 +45,8 @@
   autocorrect = prompt
 [init]
   defaultBranch = main
+[interactive]
+  diffFilter = delta --color-only
 [merge]
   conflictStyle = zdiff3
   tool = nvimdiff
