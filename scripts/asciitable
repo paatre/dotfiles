@@ -1,0 +1,91 @@
+#!/bin/bash
+# ASCII Table Generator in Multi-Column Table Format
+
+# Function to get a display string for a given ASCII code
+display_char() {
+  local code=$1
+  if [ "$code" -ge 32 ] && [ "$code" -le 126 ]; then
+    # Printable characters: use printf with octal conversion
+    printf "\\$(printf '%03o' "$code")"
+  else
+    # Common abbreviations for control characters:
+    case $code in
+      0)  echo "NUL" ;;
+      1)  echo "SOH" ;;
+      2)  echo "STX" ;;
+      3)  echo "ETX" ;;
+      4)  echo "EOT" ;;
+      5)  echo "ENQ" ;;
+      6)  echo "ACK" ;;
+      7)  echo "BEL" ;;
+      8)  echo "BS"  ;;
+      9)  echo "TAB" ;;
+      10) echo "LF"  ;;
+      11) echo "VT"  ;;
+      12) echo "FF"  ;;
+      13) echo "CR"  ;;
+      14) echo "SO"  ;;
+      15) echo "SI"  ;;
+      16) echo "DLE" ;;
+      17) echo "DC1" ;;
+      18) echo "DC2" ;;
+      19) echo "DC3" ;;
+      20) echo "DC4" ;;
+      21) echo "NAK" ;;
+      22) echo "SYN" ;;
+      23) echo "ETB" ;;
+      24) echo "CAN" ;;
+      25) echo "EM"  ;;
+      26) echo "SUB" ;;
+      27) echo "ESC" ;;
+      28) echo "FS"  ;;
+      29) echo "GS"  ;;
+      30) echo "RS"  ;;
+      31) echo "US"  ;;
+      127) echo "DEL" ;;
+      *)  echo ""    ;;
+    esac
+  fi
+}
+
+# Configuration: total ASCII codes, number of columns, and computed rows per column
+total=128
+cols=3
+rows=$(( (total + cols - 1) / cols ))
+
+# Function to print a repeated string
+print_repeat() {
+  local str=$1
+  local count=$2
+  for ((i=0; i<count; i++)); do
+    printf "%s" "$str"
+  done
+}
+
+# Print a separator line across all columns
+for (( col=0; col<cols; col++ )); do
+  print_repeat "+-----+------+-------" 1
+done
+echo "+"
+
+# Loop through each row and print the corresponding cell from each column
+for (( row=0; row<rows; row++ )); do
+  for (( col=0; col<cols; col++ )); do
+    code=$(( row + col * rows ))
+    if [ $code -ge $total ]; then
+      # If there is no code for this cell, print an empty cell
+      printf "|     |      |       "
+    else
+      char=$(display_char "$code")
+      printf "| %3d | 0x%02X | %-5s " "$code" "$code" "$char"
+    fi
+  done
+  echo "|"
+done
+
+# Print final border line
+for (( col=0; col<cols; col++ )); do
+  print_repeat "+-----+------+-------" 1
+done
+echo "+"
+
