@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Usage: ./filter_requirements.sh requirements.txt requirements_prod.txt
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <requirements.txt> <requirements_prod.txt>"
+  exit 1
+fi
+
+MAIN_REQ="$1"
+PROD_REQ="$2"
+
+# Check if files exist
+if [ ! -f "$MAIN_REQ" ]; then
+  echo "Error: File '$MAIN_REQ' not found."
+  exit 1
+fi
+
+if [ ! -f "$PROD_REQ" ]; then
+  echo "Error: File '$PROD_REQ' not found."
+  exit 1
+fi
+
+# Filter out dependencies present in the production requirements
+temp_file=$(mktemp)
+
+grep -v -F -f <(cut -d'=' -f1 "$PROD_REQ" | grep -v '^$') "$MAIN_REQ" > "$temp_file" && mv "$temp_file" "$MAIN_REQ"
