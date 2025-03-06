@@ -11,7 +11,7 @@
     if [ -n \"$COMMIT\" ]; then \
       git commit --fixup $COMMIT; \
       N=$(($(git rev-list --count $COMMIT..HEAD) + 1)); \
-      git rebase HEAD~$N; \
+      git rebase --autosquash HEAD~$N; \
     fi; \
   }; f"
   lo = log --oneline
