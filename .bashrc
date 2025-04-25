@@ -68,6 +68,9 @@ esac
 #
 # Aliases
 #
+#
+
+alias kernel='uname -sr'
 
 alias python=python3
 
