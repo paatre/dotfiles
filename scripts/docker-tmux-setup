@@ -163,18 +163,28 @@ wait_for_container() {
 # Docker compose up
 tmux split-window -h
 
+# Pull newest Haltu Kehys image
 pull_command=""
 if [ "$BUILD_CONTAINERS" = true ]; then
     pull_command="docker pull docker.haltu.net/haltu/env/$INFRA_VERSION:develop && "
 fi
 
+# Create the proper infra-specific local_settings files
+local_settings_command=""
+if [ "$BUILD_CONTAINERS" = true ]; then
+    local_settings_command="docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py; cp -n local_settings.py.tpl_dev local_settings.py'"
+fi
+
+# Run the containers
 up_command="docker compose up"
 if [ "$BUILD_CONTAINERS" = true ]; then
     up_command+=" --build"
 fi
+# Remove orphaned containers if any, orphaned containers may be left behind when configuration names change
 up_command+=" --remove-orphans"
 
-full_command="${pull_command}${up_command}"
+# Build the full command
+full_command="${pull_command}${local_settings_command}${up_command}"
 
 # Send the full command to tmux
 tmux send-keys "$full_command" C-m
