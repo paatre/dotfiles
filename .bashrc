@@ -99,6 +99,7 @@ alias dc='docker compose'
 alias dts=docker-tmux-setup
 
 alias c=clear
+alias tldr="tldr --auto-update-interval 1"
 
 alias ai='ollama run llama3.1'
 
