@@ -1,0 +1,8 @@
+[include]
+    path = ~/.gitconfig-base
+
+[includeIf "gitdir:~/Projects/paatre/**"]
+    path = ~/.gitconfig-paatre
+
+[includeIf "gitdir:~/Projects/haltu/**"]
+    path = ~/.gitconfig-haltu

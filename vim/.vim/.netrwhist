@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/home/bew/bew/src/nivensdesktop/nivensdesktop'
+let g:netrw_dirhist_6='/home/bew/bew/src/nivensdesktop'
+let g:netrw_dirhist_5='/home/bew/bew/src'
+let g:netrw_dirhist_4='/home/bew/bew'
+let g:netrw_dirhist_3='/home/bew'
+let g:netrw_dirhist_2='/home/bew/.venv/lib/python3.8/site-packages/mozilla_django_oidc'
+let g:netrw_dirhist_1='/home/bew/.venv/lib/python3.8/site-packages'
+let g:netrw_dirhist_0='/home/bew/.venv/lib/python3.8'
+let g:netrw_dirhist_9='/home/bew/.venv/lib'
+let g:netrw_dirhist_8='/home/bew/.venv'
