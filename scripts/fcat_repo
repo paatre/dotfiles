@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Use this script to find all files in the current directory and its subdirectories,
+# respecting .gitignore, and then pass those files to the fcat command.
+
+fd --type f --hidden --print0 | xargs -0 fcat

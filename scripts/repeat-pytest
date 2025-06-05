@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# repeat-pytest.sh — repeat pytest N times
+#
+# This script runs pytest a specified number of times,
+# passing any additional arguments to pytest.
+# 
+# Even though pytest-repeat is a plugin that can do this,
+# it can not be used in conjuction with UnitTest styled tests.
+# This script is a workaround for that limitation.
+#
+
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: $0 <count> [pytest options]
+
+<count>           Number of times to run pytest (positive integer)
+[pytest options]  Any options or test paths/markers you’d pass to pytest
+EOF
+  exit 1
+}
+
+# Need at least one argument (the count)
+if [ $# -lt 1 ]; then
+  usage
+fi
+
+count=$1
+shift
+
+# Validate count is a positive integer
+if ! [[ $count =~ ^[1-9][0-9]*$ ]]; then
+  echo "Error: <count> must be a positive integer." >&2
+  usage
+fi
+
+# Loop and invoke pytest
+for ((i=1; i<=count; i++)); do
+  echo "=== pytest run $i of $count ==="
+  pytest "$@" || {
+    echo "❌ pytest failed on iteration $i."
+    exit 1
+  }
+done
+
+echo "✅ All $count pytest runs passed."
+

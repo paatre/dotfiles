@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# This script adds a newline at the end of a file if it doesn't already have one.
+
+set -euo pipefail
+
+git rev-parse --git-dir > /dev/null 2>&1 || {
+  echo "Error: not a Git repository." >&2
+  exit 1
+}
+
+for f in $(git grep --cached -Il ''); \
+do tail -c1 $f | read -r _ || echo >> $f; \
+done

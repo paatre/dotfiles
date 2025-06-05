@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Concatenates and displays content of files with filenames.
+awk 'FNR==1 { if (NR == 1) { print FILENAME ":" } else { print "\n" FILENAME ":" } } 1' "$@"
