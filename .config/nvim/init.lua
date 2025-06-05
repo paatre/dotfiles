@@ -909,6 +909,14 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+
+      -- Set the filetype for "requirements_*.txt" so it’s treated like "requirements.txt"
+      vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+        pattern = 'requirements_*.*',
+        callback = function()
+          vim.bo.filetype = 'requirements'
+        end,
+      })
     end,
   },
   { -- HTML emmet snippets
