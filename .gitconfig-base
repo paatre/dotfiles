@@ -1,0 +1,65 @@
+[alias]
+  amendpush = "!f() { git add ${@:-.} && git commit --amend --no-edit && git push -f; }; f"
+  br = branch
+  co = commit
+  d = diff
+  delete-merged = "!git branch --merged| egrep -v '(^\\*|master|main|develop)' | xargs git branch -d"
+  discard = "!git reset --hard HEAD && git clean -di"
+  ds = diff --staged
+  fixup = "!f() { \
+    COMMIT=$(git log --oneline | fzf --height 40% --reverse --prompt='Select commit for fixup: ' | awk '{print $1}'); \
+    if [ -n \"$COMMIT\" ]; then \
+      git commit --fixup $COMMIT; \
+      N=$(($(git rev-list --count $COMMIT..HEAD) + 1)); \
+      git rebase --autosquash HEAD~$N; \
+    fi; \
+  }; f"
+  lo = log --oneline
+  st = status
+  sw = switch
+  undo = reset --soft HEAD^
+  unstage = restore --staged :/
+[branch]
+  sort = -committerdate
+[column]
+  ui = auto
+[commit]
+  verbose = true
+[core]
+  attributesFile = /home/tiikeri/dotfiles/.gitattributes
+  editor = nvim
+  pager = delta
+[delta]
+  dark = true
+  navigate = true
+[diff "python"]
+  algorithm = histogram
+  colorMoved = plain
+  mnemonicPrefix = true
+  xfuncname = ^[ \\t]*def[ \\t]+.*$
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
+[help]
+  autocorrect = prompt
+[init]
+  defaultBranch = main
+[interactive]
+  diffFilter = delta --color-only
+[merge]
+  conflictStyle = zdiff3
+  tool = nvimdiff
+[pull]
+  ff = only
+[push]
+  autoSetupRemote = true
+  followTags = true
+[rebase]
+  autoSquash = true
+  autoStash = true
+[rerere]
+  autoUpdate = true
+  enabled = true
+[tag]
+  sort = version:refname
