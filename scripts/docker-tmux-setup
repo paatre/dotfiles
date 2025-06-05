@@ -172,7 +172,7 @@ fi
 # Create the proper infra-specific local_settings files
 local_settings_command=""
 if [ "$BUILD_CONTAINERS" = true ]; then
-    local_settings_command="docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py; cp -n local_settings.py.tpl_dev local_settings.py'"
+    local_settings_command="docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py; cp -n local_settings.py.tpl_dev local_settings.py' && "
 fi
 
 # Run the containers
