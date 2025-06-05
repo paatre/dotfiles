@@ -1,137 +1,42 @@
 # README
 
-This repository contains all of my configuration files that I want to keep
-when switching between host machines. It's not perfect yet as the repository
-does not have all the files added yet but I'll keep on adding them when I
-remember.
+This repository contains my personal configuration files (dotfiles), organized and managed using [GNU Stow](https://www.gnu.org/software/stow/). This setup allows for flexible and selective deployment of configurations across different machines by symlinking files from this repository into my home directory.
 
-## Configurations
+## Purpose
 
-The configuration files configure different applications and tools. Here's a
-list of these those configuration targets.
+The primary goal of this repository is to:
+* Provide a centralized and version-controlled backup of my most important configuration files.
+* Enable quick and easy setup of my preferred development environment on new systems.
+* Maintain a clear separation between my tracked dotfiles and application-specific caches or plugins.
 
-### Vim
+## Configuration Targets
+
+This repository includes configurations for a variety of applications and tools, generally organized into individual Stow "packages" (directories). These cover areas such as:
+
+* **Shells:** Bash
+* **Terminal Emulators:** Gnome Terminal
+* **Text Editors:** Vim, Neovim
+* **Version Control:** Git
+* **Terminal Multiplexers:** Tmux
+* **System Utilities:** `bpytop`, `fd`, `fzf`, `starship`
+* **Miscellaneous:** General scripts, Ubuntu-specific settings, custom data files.
+
+### Plugin Management (Vim/Neovim)
+
+For editors like Vim and Neovim, plugins are managed by their respective plugin managers (e.g., `vim-plug` for Vim, `lazy.nvim` for Neovim) and are **not tracked** within this Git repository. This keeps the dotfiles clean and focused solely on personal configuration. Plugins can be installed by running the appropriate command (e.g., `:PlugInstall` in Vim) after the main configuration is stowed.
+
+## Usage with Stow
+
+To deploy a configuration package, simply navigate to the root of this repository (`~/dotfiles/`) and run `stow <package_name>`. For example:
 
 ```bash
-.vim
-├── after
-│   └── ftplugin
-│       ├── markdown.vim
-│       └── vim.vim
-└── autoload
-    └── plug.vim
-.vimrc
+cd ~/dotfiles
+stow bash
+stow vim
+stow gnome-terminal
+# ...and so on for other packages you wish to deploy.
 ```
-
-Notice how we have `.vim/after/` directory which handles overriding of
-ftplugins in the source code. Without the directory and its `ftplugin` files,
-autoformatting wouldn't work because rules of the formatting is overriden, for
-example, in the `/usr/share/vim82/ftplugin/vim.vim` file.
-
-The Vim setup uses [vim-plug](https://github.com/junegunn/vim-plug) plugin
-manager. My current machine includes a plugin directory in `~/.vim/plugged`
-(as defined in `~/.vimrc`) but the plugins aren't added to this repository
-because each entry in the directory is a submodule. The plugins can be
-installed to the machine by calling `:PlugInstall` in Vim. 
-
-#### Plugins
-
-Plugins are set between `call plug#begin('~/.vim/plugged')` and `call
-plug#end()` in  `.vimrc`.
- 
-- [`morhetz/gruvbox`](https://github.com/morhetz/gruvbox)
-- [`vim-airline/vim-airline`](https://github.com/vim-airline/vim-airline)
-- [`tpope/vim-fugitive`](https://github.com/tpope/vim-fugitive)
-- [`junegunn/fzf.vim`](junegunn/fzf.vim)
-
-##### Gruvbox
-
-The Gruvbox plugin is a color theme for Vim.
-
-Gruvbox is configured in a following way:
-
-```bash
-autocmd vimenter * ++nested colorscheme gruvbox
-set background=dark
-``` 
-
-##### Airline
-
-Airline is a statusline plugin.
-
-The most important Airline configuration is this:
-
-```bash
-let g:airline_powerline_fonts = 1
-```
-
-The Airline plugin is using
-[Powerline](https://github.com/powerline/powerline) fonts which make the
-statusline look cool with pointy text containers etc.
-
-What needs to be noticed is that for the Powerline fonts to actually work the
-Powerline fonts need to installed first. This should be done via cloning the
-[Powerline fonts repository](https://github.com/powerline/fonts) and running
-the installation script `./install.sh`. After this, the font can be changed
-from the Gnome Terminal preferences for the used profile. Depending on the
-fonts and the computer, some fonts work better with the Powerline than others.
-
-##### Fugitive
-
-A Vim wrapper for Vim. Needed this one for getting helpful branch info from a
-current directory if in a Git repository. No need for extra configuration at
-the moment.
-
-##### Fzf
-
-Fzf.vim is a fuzzy file finder. This plugin works as a wrapper for the `fzf`
-command-line tool.
-
-### Gnome Terminal
-
-```bash
-.config/
-└── gnome-terminal
-    └── gnome-terminal-profiles.dconf
-```
-
-`gnome-terminal-profiles.dconf` includes Gnome Terminal profiles. It includes
-a Gruvbox Dark profile created via [Gogh](https://github.com/Gogh-Co/Gogh).
-
-The profiles have been exported with the following `dconf` command:
-
-```bash
-dconf dump /org/gnome/terminal/legacy/profiles:/ > gnome-terminal-profiles.dconf
-```
-
-When a new machine is set up, the profiles can also be loaded in with `dconf`:
-
-```bash
-dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
-```
-
-### Bash
-
-```bash
-.bash_aliases
-.bash_logout
-.bashrc
-.profile
-``` 
-
-### Tmux
-
-```bash
-.tmux.conf
-```
-
-Currently includes only one variable that sets the `$TERM` as `tmux-256color` for
-shell prompt color support. Normally it would be `screen` which does not include
-the color support.
 
 ## License
 
-Feel free to use any of these files to your liking in your own machines. This
-repository is licensed under The Unlicense. Read more from
-[LICENSE](https://github.com/paatre/dotfiles/blob/main/LICENSE).
-
+Feel free to use any of these files to your liking in your own machines. This repository is licensed under The Unlicense. Read more from LICENSE.
