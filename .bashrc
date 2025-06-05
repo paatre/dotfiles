@@ -200,6 +200,10 @@ export NODE_REPL_HISTORY=""
 # Starship settings
 #
 eval "$(starship init bash)"
+
+#
+# Deno settings
+#
 . "/home/tiikeri/.deno/env"
 
 #
