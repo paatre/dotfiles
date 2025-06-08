@@ -117,25 +117,17 @@ while [[ "$#" -gt 0 ]]; do # $# expands to the number of positional arguments
     shift
 done
 
-# Determine the editor if not specified via command-line
-if [[ -z "$EDITOR_CMD" ]]; then
-    if [[ -n "$EDITOR" ]]; then
-        echo "Error: No editor specified. Please provide an editor using -e or --editor, or set the \$EDITOR environment variable."
-        exit 1
-    fi
-fi
-
 # Validate the specified editor
 validate_editor() {
-    if [[ -z "$1" ]]; then
+    if [[ -z "$EDITOR_CMD" ]]; then
         echo "Error: No editor specified. Please provide an editor using -e or --editor, or set the \$EDITOR environment variable."
         exit 1
-    eliif ! command -v "$1" &>/dev/null; then
-        echo "Error: Specified editor '$1' is not installed or not in PATH."
+    elif ! command -v "$EDITOR_CMD" &>/dev/null; then
+        echo "Error: Specified editor '$EDITOR_CMD' is not installed or not in PATH."
         exit 1
     fi
 }
-validate_editor "$EDITOR_CMD"
+validate_editor
 
 # Ensure TMUX is running
 if [ -z "$TMUX" ]; then
