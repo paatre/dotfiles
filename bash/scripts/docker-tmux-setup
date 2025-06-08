@@ -65,23 +65,10 @@ usage() {
 
 # Default values
 BUILD_CONTAINERS=false
-EDITOR_CMD=""  # Will be determined below
+EDITOR_CMD="${EDITOR:-}"
 INCLUDE_VITE=false
 INFRA_VERSION="lilium"
 SERVICE_NAME="runserver"
-
-# Check if the editor is set in the environment variable and it's executable
-validate_editor() {
-    if [[ -z "$1" ]]; then
-        echo "Error: No editor specified. Please provide an editor using -e or --editor, or set the \$EDITOR environment variable."
-        exit 1
-    fi
-
-    if ! command -v "$1" &>/dev/null; then
-        echo "Error: Specified editor '$1' is not installed or not in PATH."
-        exit 1
-    fi
-}
 
 # Parse command-line arguments
 while [[ "$#" -gt 0 ]]; do # $# expands to the number of positional arguments
@@ -133,14 +120,21 @@ done
 # Determine the editor if not specified via command-line
 if [[ -z "$EDITOR_CMD" ]]; then
     if [[ -n "$EDITOR" ]]; then
-        EDITOR_CMD="$EDITOR"
-    else
         echo "Error: No editor specified. Please provide an editor using -e or --editor, or set the \$EDITOR environment variable."
         exit 1
     fi
 fi
- 
+
 # Validate the specified editor
+validate_editor() {
+    if [[ -z "$1" ]]; then
+        echo "Error: No editor specified. Please provide an editor using -e or --editor, or set the \$EDITOR environment variable."
+        exit 1
+    eliif ! command -v "$1" &>/dev/null; then
+        echo "Error: Specified editor '$1' is not installed or not in PATH."
+        exit 1
+    fi
+}
 validate_editor "$EDITOR_CMD"
 
 # Ensure TMUX is running
