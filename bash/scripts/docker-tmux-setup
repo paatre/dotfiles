@@ -13,6 +13,7 @@
 #   - Initializes Docker Compose with a specified service (defaults to runserver).
 #   - Optionally includes a Vite development server pane.
 #   - Provides an interactive shell to the specified service container with a pre-activated Python virtual environment.
+#   - Finds the internal port of the Docker service automatically from the Docker Compose file.
 #   - Opens the user-specified command-line editor in the left pane for code editing.
 #
 # Usage:
@@ -135,19 +136,6 @@ if [ -z "$TMUX" ]; then
     exit 1
 fi
 
-# Function to wait for a container to be ready
-wait_for_container() {
-    echo "Waiting for Django server to run on localhost:8000 in $SERVICE_NAME container"
-    until \
-        docker compose exec -T "$SERVICE_NAME" \
-        curl -sf http://localhost:8000/ > \
-        /dev/null 2>&1; \
-    do
-        sleep 1
-    done
-}
-
-# Docker compose up
 tmux split-window -h
 
 # Pull newest Haltu Kehys image
@@ -176,8 +164,91 @@ full_command="${pull_command}${local_settings_command}${up_command}"
 # Send the full command to tmux
 tmux send-keys "$full_command" C-m
 
-# Wait for the the container to be ready
-wait_for_container "$SERVICE_NAME"
+# Determine the Docker Compose file path
+COMPOSE_FILE="docker-compose.yml"
+if [ ! -f "$COMPOSE_FILE" ]; then
+    echo "Error: $COMPOSE_FILE not found in the current directory."
+    exit 1
+fi
+
+# Initialize variable for the container's internal port for health checks
+CONTAINER_HEALTH_PORT=""
+
+# Try to get from the first 'ports' mapping (e.g., "8080:80" -> 80, or "80" -> 80)
+# '.[length-1]' correctly handles both "HOST:CONTAINER" and "CONTAINER" formats.
+# We explicitly check for empty or "null" output from yq
+TEMP_PORT_FROM_PORTS=$(yq e ".services.\"${SERVICE_NAME}\".ports[0] | split(\":\") | .[length-1]" "$COMPOSE_FILE" 2>/dev/null)
+if [[ -n "$TEMP_PORT_FROM_PORTS" && "$TEMP_PORT_FROM_PORTS" != "null" ]]; then
+    CONTAINER_HEALTH_PORT="$TEMP_PORT_FROM_PORTS"
+fi
+
+# If not found in 'ports', try the first 'expose' entry
+if [[ -z "$CONTAINER_HEALTH_PORT" ]]; then
+    TEMP_PORT_FROM_EXPOSE=$(yq e ".services.\"${SERVICE_NAME}\".expose[0]" "$COMPOSE_FILE" 2>/dev/null)
+    if [[ -n "$TEMP_PORT_FROM_EXPOSE" && "$TEMP_PORT_FROM_EXPOSE" != "null" ]]; then
+        CONTAINER_HEALTH_PORT="$TEMP_PORT_FROM_EXPOSE"
+    fi
+fi
+
+# Common service ports as fallbacks
+if [[ -z "$CONTAINER_HEALTH_PORT" ]]; then
+    case "$SERVICE_NAME" in
+        db|postgres|postgresql)
+            CONTAINER_HEALTH_PORT="5432"
+            echo "Info: '$SERVICE_NAME' service internal port not found in compose file. Defaulting to PostgreSQL port 5432."
+            ;;
+        # TODO: Add other common services if needed
+        *)
+            echo "Warning: Could not determine internal container port for service '$SERVICE_NAME' from $COMPOSE_FILE."
+            echo "Defaulting internal health check port to 8000. Ensure this is correct for your service."
+            CONTAINER_HEALTH_PORT="8000"
+            ;;
+    esac
+fi
+
+# Function to wait for a container to be ready
+# It now correctly accepts service name and the *internal* container port as arguments
+wait_for_container() {
+    local service="$1"
+    local container_internal_port="$2"
+
+    local host_port=""
+    echo "Attempting to find host port mapping for service '$service' (internal port $container_internal_port)..."
+
+    while [[ -z "$host_port" ]]; do
+        host_port=$(docker compose port "$service" "$container_internal_port" 2>/dev/null | cut -d ':' -f 2)
+        if [[ -z "$host_port" ]]; then
+            sleep 1
+        fi
+    done
+
+    echo "Service $service (internal port $container_internal_port) is mapped to host port $host_port"
+    echo "Waiting for $service container to be ready on localhost:$host_port"
+
+    case "$service" in
+        db|postgres|postgresql)
+            echo "Performing PostgreSQL health check using pg_isready..."
+            # Add -U postgres (or your configured PG user) to the pg_isready command
+            until docker compose exec -T "$service" pg_isready -h localhost -p "$container_internal_port" -U postgres > /dev/null 2>&1; do
+                echo "PostgreSQL not ready yet on port $container_internal_port, waiting..."
+                sleep 1 # Databases can take a bit longer to start
+            done
+            ;;
+        # TODO: Add other common services with specific health checks if needed
+        *)
+            # Default for HTTP-based services
+            echo "Performing HTTP health check using curl..."
+            until docker compose exec -T "$service" curl -sf "http://localhost:$container_internal_port/" > /dev/null 2>&1; do
+                echo "Service $service not ready yet, waiting..."
+                sleep 1
+            done
+            ;;
+    esac
+    echo "$service on host port $host_port is ready!"
+}
+
+# Wait for the container to be ready, passing the correct variables
+wait_for_container "$SERVICE_NAME" "$CONTAINER_HEALTH_PORT"
 
 if [ "$INCLUDE_VITE" = true ]; then
     # Vite dev server
