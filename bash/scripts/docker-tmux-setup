@@ -64,6 +64,7 @@ usage() {
 }
 
 # Default values
+BUILD_CONTAINERS=false
 SERVICE_NAME="runserver"
 INCLUDE_VITE=false
 INFRA_VERSION="lilium"
