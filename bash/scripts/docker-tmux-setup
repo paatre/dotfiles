@@ -65,10 +65,10 @@ usage() {
 
 # Default values
 BUILD_CONTAINERS=false
-SERVICE_NAME="runserver"
+EDITOR_CMD=""  # Will be determined below
 INCLUDE_VITE=false
 INFRA_VERSION="lilium"
-EDITOR_CMD=""  # Will be determined below
+SERVICE_NAME="runserver"
 
 # Check if the editor is set in the environment variable and it's executable
 validate_editor() {
