@@ -74,6 +74,7 @@ fi
 if [ ${#PREPEND_PATHS[@]} -gt 0 ]; then
     export PATH="$(IFS=:; echo "${PREPEND_PATHS[*]}"):$PATH"
 fi
+unset PREPEND_PATHS
 
 #
 # Aliases
