@@ -9,17 +9,6 @@ case $- in
 esac
 
 #
-# PATH settings
-#
-
-# PATH
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$PATH:/usr/local/go/bin" # Go binary
-export PATH="$HOME/scripts:$PATH" # symlink to ~/dotfiles/scripts
-
-. "$HOME/.cargo/env"
-
-#
 # Shell prompt settings
 #
 
@@ -66,8 +55,28 @@ xterm*|rxvt*)
 esac
 
 #
-# Aliases
+# PATH management
 #
+
+# Initialize an array for custom paths to prepend to PATH
+declare -a PREPEND_PATHS
+
+PREPEND_PATHS=(
+    "$HOME/dotfiles/bash/scripts/"  # Personal Bash scripts
+    "$HOME/.local/bin"              # Local user binaries
+    "$(go env GOPATH)/bin"          # Go binaries
+)
+
+if [ -d "/usr/local/go/bin" ]; then
+    PREPEND_PATHS+=("/usr/local/go/bin")  # Go binary
+fi
+
+if [ ${#PREPEND_PATHS[@]} -gt 0 ]; then
+    export PATH="$(IFS=:; echo "${PREPEND_PATHS[*]}"):$PATH"
+fi
+
+#
+# Aliases
 #
 
 alias kernel='uname -sr'
@@ -217,3 +226,8 @@ eval "$(pyenv init -)"
 # Zoxide settings
 #
 eval "$(zoxide init --cmd cd bash)"
+
+#
+# Rust settings
+#
+. "$HOME/.cargo/env"
