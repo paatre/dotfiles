@@ -323,9 +323,6 @@ require('lazy').setup({
         end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
-
-      -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -823,7 +820,6 @@ require('lazy').setup({
         shortcut_type = 'number',
       }
     end,
-    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
   },
 
   -- Highlight todo, notes, etc in comments
@@ -883,7 +879,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'git_config', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -915,6 +911,15 @@ require('lazy').setup({
         pattern = 'requirements_*.*',
         callback = function()
           vim.bo.filetype = 'requirements'
+        end,
+      })
+
+      -- Set the filetype for "gitconfig-*" files so they are treated like "gitconfig"
+      vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+        group = vim.api.nvim_create_augroup('CustomGitConfig', { clear = true }),
+        pattern = '.gitconfig-*',
+        callback = function()
+          vim.bo.filetype = 'gitconfig'
         end,
       })
     end,
@@ -950,13 +955,38 @@ require('lazy').setup({
       vim.fn['mkdp#util#install']()
     end,
   },
+  { -- Icons for Nvim Tree
+    'nvim-tree/nvim-web-devicons',
+    lazy = false,
+    opts = {
+      override = {
+        ['.gitconfig'] = {
+          icon = '',
+          color = '#F14E32',
+          name = 'GitConfig',
+        },
+        ['.gitconfig-base'] = {
+          icon = '',
+          color = '#F14E32',
+          name = 'GitConfig'
+        },
+        ['.gitconfig-haltu'] = {
+          icon = '',
+          color = '#F14E32',
+          name = 'GitConfig'
+        },
+        ['.gitconfig-paatre'] = {
+          icon = '',
+          color = '#F14E32',
+          name = 'GitConfig'
+        },
+      },
+    },
+  },
   { -- File tree plugin
     'nvim-tree/nvim-tree.lua',
     version = '*',
     lazy = false,
-    dependencies = {
-      'nvim-tree/nvim-web-devicons',
-    },
     config = function()
       require('nvim-tree').setup {}
     end,
