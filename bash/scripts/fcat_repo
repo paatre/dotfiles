@@ -3,4 +3,26 @@
 # Use this script to find all files in the current directory and its subdirectories,
 # respecting .gitignore, and then pass those files to the fcat command.
 
-fd --type f --hidden --print0 | xargs -0 fcat
+declare -a EXCLUDED_MIME_TYPES=(
+  "binary*"
+  "image/*"
+  "application/vnd.ms-fontobject"
+  "font/*"
+)
+
+fd --type f --hidden --print0 | while IFS= read -r -d $'\0' file; do
+  mime_type=$(file --mime-type -b "$file")
+
+  should_exclude=false
+
+  for pattern in "${EXCLUDED_MIME_TYPES[@]}"; do
+    if [[ "$mime_type" == $pattern ]]; then
+      should_exclude=true
+      break
+    fi
+  done
+
+  if ! $should_exclude; then
+    printf '%s\0' "$file"
+  fi
+done | xargs -0 fcat
