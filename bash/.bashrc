@@ -64,17 +64,25 @@ declare -a PREPEND_PATHS
 PREPEND_PATHS=(
     "$HOME/dotfiles/bash/scripts/"  # Personal Bash scripts
     "$HOME/.local/bin"              # Local user binaries
-    "$(go env GOPATH)/bin"          # Go binaries
 )
 
-if [ -d "/usr/local/go/bin" ]; then
-    PREPEND_PATHS+=("/usr/local/go/bin")  # Go binary
+SYSTEM_GO_BIN="/usr/local/go/bin"
+
+if [ -d "$SYSTEM_GO_BIN" ]; then
+    PREPEND_PATHS+=("$SYSTEM_GO_BIN")
+
+    GOPATH_BIN="$("$SYSTEM_GO_BIN/go" env GOPATH)/bin"
+
+    if [ -d "$GOPATH_BIN" ]; then
+        PREPEND_PATHS+=("$GOPATH_BIN")
+    fi
 fi
 
 if [ ${#PREPEND_PATHS[@]} -gt 0 ]; then
     export PATH="$(IFS=:; echo "${PREPEND_PATHS[*]}"):$PATH"
 fi
-unset PREPEND_PATHS
+
+unset PREPEND_PATHS SYSTEM_GO_BIN GOPATH_BIN
 
 #
 # Aliases
