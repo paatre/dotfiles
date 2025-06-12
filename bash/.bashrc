@@ -78,6 +78,12 @@ if [ -d "$SYSTEM_GO_BIN" ]; then
     fi
 fi
 
+export PYENV_ROOT="$HOME/.pyenv"
+
+if [[ -d "$PYENV_ROOT/bin" ]]; then
+    PREPEND_PATHS+=("$PYENV_ROOT/bin")
+fi
+
 if [ ${#PREPEND_PATHS[@]} -gt 0 ]; then
     export PATH="$(IFS=:; echo "${PREPEND_PATHS[*]}"):$PATH"
 fi
@@ -227,7 +233,6 @@ eval "$(starship init bash)"
 #
 # Pyenv settings
 #
-export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init -)"
 
 #
