@@ -58,13 +58,25 @@ esac
 # PATH management
 #
 
+# Environment variables for tools' paths
+export PYENV_ROOT="$HOME/.pyenv"
+export CARGO_HOME="$HOME/.cargo"
+export DENO_INSTALL="$HOME/.deno"
+
 # Initialize an array for custom paths to prepend to PATH
 declare -a PREPEND_PATHS
 
-PREPEND_PATHS=(
-    "$HOME/dotfiles/bash/scripts/"  # Personal Bash scripts
-    "$HOME/.local/bin"              # Local user binaries
-)
+if [[ -d "$PYENV_ROOT/bin" ]]; then
+    PREPEND_PATHS+=("$PYENV_ROOT/bin")
+fi
+
+if [[ -d "$CARGO_HOME/bin" ]]; then
+    PREPEND_PATHS+=("$CARGO_HOME/bin")
+fi
+
+if [[ -d "$DENO_INSTALL/bin" ]]; then
+    PREPEND_PATHS+=("$DENO_INSTALL/bin")
+fi
 
 SYSTEM_GO_BIN="/usr/local/go/bin"
 
@@ -78,11 +90,10 @@ if [ -d "$SYSTEM_GO_BIN" ]; then
     fi
 fi
 
-export PYENV_ROOT="$HOME/.pyenv"
-
-if [[ -d "$PYENV_ROOT/bin" ]]; then
-    PREPEND_PATHS+=("$PYENV_ROOT/bin")
-fi
+PREPEND_PATHS=(
+    "$HOME/dotfiles/bash/scripts/"  # Personal Bash scripts
+    "$HOME/.local/bin"              # Local user binaries
+)
 
 if [ ${#PREPEND_PATHS[@]} -gt 0 ]; then
     export PATH="$(IFS=:; echo "${PREPEND_PATHS[*]}"):$PATH"
@@ -226,11 +237,6 @@ export NODE_REPL_HISTORY=""
 eval "$(starship init bash)"
 
 #
-# Deno settings
-#
-. "/home/tiikeri/.deno/env"
-
-#
 # Pyenv settings
 #
 eval "$(pyenv init -)"
@@ -239,8 +245,3 @@ eval "$(pyenv init -)"
 # Zoxide settings
 #
 eval "$(zoxide init --cmd cd bash)"
-
-#
-# Rust settings
-#
-. "$HOME/.cargo/env"
