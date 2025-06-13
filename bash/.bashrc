@@ -90,7 +90,7 @@ if [ -d "$SYSTEM_GO_BIN" ]; then
     fi
 fi
 
-PREPEND_PATHS=(
+PREPEND_PATHS+=(
     "$HOME/dotfiles/bash/scripts/"  # Personal Bash scripts
     "$HOME/.local/bin"              # Local user binaries
 )
