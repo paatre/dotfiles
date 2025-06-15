@@ -4,18 +4,12 @@
 
 return {
 	"andythigpen/nvim-coverage",
-	dependencies = "nvim-lua/plenary.nvim",
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+	},
 	config = function()
 		require("coverage").setup({
-			commands = true,
-			lang = {
-				python = {
-					coverage_file = vim.fn.getcwd() .. "/.coverage",
-					auto_reload = true,
-					coverage_command = 'docker compose exec runserver sh -c "cd /home/bew/bew && /home/bew/.venv/bin/coverage json -o -"',
-					only_open_buffers = false,
-				},
-			},
+			auto_reload = true,
 		})
 	end,
 }
