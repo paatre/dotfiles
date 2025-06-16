@@ -186,10 +186,6 @@ return {
 				},
 			},
 			pyright = {
-				-- cmd = { 'docker', 'compose', 'exec', 'runserver', 'pyright-langserver', '--stdio' },
-				-- root_dir = function(fname)
-				--   return '~/Projects/haltu/wilma/wilma-desktop-demo'
-				-- end,
 				settings = {
 					python = {
 						analysis = {
