@@ -1,6 +1,8 @@
 [alias]
+  amend = commit --amend
   amendpush = "!f() { git add ${@:-.} && git commit --amend --no-edit && git push -f; }; f"
   br = branch
+  cf = cat-file
   co = commit
   d = diff
   delete-merged = "!git branch --merged| egrep -v '(^\\*|master|main|develop)' | xargs git branch -d"
