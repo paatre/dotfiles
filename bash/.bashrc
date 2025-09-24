@@ -62,6 +62,7 @@ esac
 export PYENV_ROOT="$HOME/.pyenv"
 export CARGO_HOME="$HOME/.cargo"
 export DENO_INSTALL="$HOME/.deno"
+export PULUMI_HOME="$HOME/.pulumi"
 
 # Initialize an array for custom paths to prepend to PATH
 declare -a PREPEND_PATHS
@@ -76,6 +77,10 @@ fi
 
 if [[ -d "$DENO_INSTALL/bin" ]]; then
     PREPEND_PATHS+=("$DENO_INSTALL/bin")
+fi
+
+if [[ -d "$PULUMI_HOME/bin" ]]; then
+    PREPEND_PATHS+=("$PULUMI_HOME/bin")
 fi
 
 SYSTEM_GO_BIN="/usr/local/go/bin"
