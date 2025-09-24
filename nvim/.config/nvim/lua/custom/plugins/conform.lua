@@ -13,15 +13,13 @@ return {
 		},
 	},
 	opts = {
-		format_on_save = function(bufnr)
-			local disable_filetypes = { c = true, cpp = true, javascript = true }
-			return {
-				timeout_ms = 500,
-				lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-			}
-		end,
+		format_on_save = {
+			timeout_ms = 500,
+			lsp_fallback = true,
+		},
 		formatters_by_ft = {
 			lua = { "stylua" },
+			python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
 		},
 	},
 }

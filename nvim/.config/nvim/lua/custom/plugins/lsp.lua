@@ -99,13 +99,6 @@ return {
 
 		-- Enable and automatically install the following language servers
 		local servers = {
-			djlint = {},
-			emmet_ls = {
-				filetypes = {
-					"html",
-				},
-			},
-			gopls = {},
 			lua_ls = {
 				settings = {
 					Lua = {
@@ -113,13 +106,34 @@ return {
 							callSnippet = "Replace",
 						},
 						diagnostics = {
-							disable = { 'missing-fields' },
+							disable = { "missing-fields" },
 							globals = { "vim" },
 						},
 					},
 				},
 			},
-			pyright = {},
+			gopls = {},
+			pyright = {
+				-- before_init = function(params)
+				-- 	params.processId = vim.NIL
+				-- end,
+				-- cmd = {
+				--   "docker", "exec", "-i",
+				--   "runserver",
+				--   "/home/bew/.venv/bin/pyright-langserver",
+				--   "--stdio"
+				-- },
+				-- root_dir = require("lspconfig/util").root_pattern(".git", "manage.py", vim.fn.getcwd()),
+			},
+			ruff = {
+				cmd = { "ruff-lsp" },
+				filetypes = { "python" },
+			},
+			emmet_ls = {
+				filetypes = {
+					"html",
+				},
+			},
 		}
 
 		require("mason").setup()
