@@ -1,24 +1,42 @@
 #!/usr/bin/bash
 
-xml=$(curl -sSL "https://www.lipsum.com/feed/xml")
-lipsum=$(echo "$xml" | xmllint --xpath 'string(/feed/lipsum)' -)
-sentence_lat=$(echo "$lipsum" | sed 's/\([.!?]\) /\1\n/g' | sed -n '2p')
-target_lang="fi"
+# Fetch supported languages
+supported_languages_json=$(curl -sSL -X GET \
+    -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+    -H "x-goog-user-project: teemun-aamutoivotus" \
+    "https://translation.googleapis.com/language/translate/v2/languages")
+
+# Extract language codes and choose a random one
+language_codes=($(echo "$supported_languages_json" | jq -r '.data.languages[].language'))
+random_index=$(( RANDOM % ${#language_codes[@]} ))
+target_lang="${language_codes[$random_index]}"
+
+original_text="Huomenta!"
+
+# Prepare translation request
 translate_json=$(jq -n \
-                    --arg q "$sentence_lat" \
+                    --arg q "$original_text" \
                     --arg target "$target_lang" \
                     '{q: $q, target: $target}')
+
+# Send translation request
 response_json=$(curl -sSL -X POST \
     -H "Authorization: Bearer $(gcloud auth print-access-token)" \
     -H "x-goog-user-project: teemun-aamutoivotus" \
     -H "Content-Type: application/json; charset=utf-8" \
     -d "$translate_json" \
     "https://translation.googleapis.com/language/translate/v2")
+
+# Extract translated sentence
 translated_sentence=$(echo "$response_json" | jq -r '.data.translations[0].translatedText')
+
+# Prepare Slack message
 slack_message=$(jq -n \
-                    --arg sentence_lat "$sentence_lat" \
+                    --arg original_text "$original_text" \
                     --arg translated_sentence "$translated_sentence" \
-                    '{"text": ($sentence_lat + "\n" + $translated_sentence)}')
+                    --arg target_lang_name "$target_lang_name" \
+                    '{"text": $translated_sentence}')
+
+# Send Slack message
 webhook_url=$(pass show slack/webhook_url)
 curl -sSL -X POST -H 'Content-type: application/json' --data "$slack_message" "$webhook_url" >/dev/null
-
