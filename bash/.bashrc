@@ -169,6 +169,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Load work stuff
+if [ -f "$HOME/.bash_work" ]; then
+    . "$HOME/.bash_work"
+fi
+
 #
 # Editor settings
 #
