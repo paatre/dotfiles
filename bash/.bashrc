@@ -192,7 +192,7 @@ HISTSIZE=1000
 HISTFILESIZE=2000
 
 # History (~/.bash_history) time format
-HISTTIMEFORMAT="%d/%m/%y %T "
+HISTTIMEFORMAT="%Y-%m-%dT%H:%M:%S%z "
 
 #
 # Window settings
