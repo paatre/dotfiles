@@ -63,6 +63,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 export CARGO_HOME="$HOME/.cargo"
 export DENO_INSTALL="$HOME/.deno"
 export PULUMI_HOME="$HOME/.pulumi"
+export OPENCODE_BIN="$HOME/.opencode/bin"
 
 # Initialize an array for custom paths to prepend to PATH
 declare -a PREPEND_PATHS
@@ -81,6 +82,10 @@ fi
 
 if [[ -d "$PULUMI_HOME/bin" ]]; then
     PREPEND_PATHS+=("$PULUMI_HOME/bin")
+fi
+
+if [[ -d "$OPENCODE_BIN" ]]; then
+    PREPEND_PATHS+=("$OPENCODE_BIN")
 fi
 
 SYSTEM_GO_BIN="/usr/local/go/bin"
