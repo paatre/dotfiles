@@ -15,18 +15,17 @@ echo "🏗️ Launching $IMAGE..."
 lxc launch "$IMAGE" "$CONTAINER_NAME"
 
 echo "🌐 Waiting for network connectivity..."
-ITER=0
-MAX_RETRIES=30
+TIMEOUT=15
 while ! lxc exec "$CONTAINER_NAME" -- ping -c 1 -W 1 google.com >/dev/null 2>&1; do
     printf "."
     sleep 1
-    ITER=$((ITER+1))
-    if [ $ITER -ge $MAX_RETRIES ]; then
-        echo -e "\n❌ Error: Network timeout in $CONTAINER_NAME"
+    ((TIMEOUT--))
+    if [ $TIMEOUT -le 0 ]; then
+        echo -e "\n❌ Error: Network timeout. Check host bridge."
         exit 1
     fi
 done
-echo -e "\n✨ Network is up!"
+echo -e "✨ Online!"
 
 echo "📤 Pushing dotfiles and setup.sls..."
 lxc file push -r "$DOTFILES_DIR" "$CONTAINER_NAME/root/"
