@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+
 echo "🚀 Bootstrapping the system..."
 
 # 1. Install Salt Minion from official Salt Project repo
