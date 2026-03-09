@@ -23,6 +23,6 @@ fi
 # 2. Run Salt in Masterless mode (--local)
 # We pass the current directory's 'salt' folder as the file root
 export SUDO_USER_HOME=$HOME
-sudo --preserve-env=SUDO_USER_HOME salt-call --local --file-root="$(pwd)/salt" state.apply setup -l info --out=highstate --force-color
+sudo --preserve-env=SUDO_USER_HOME salt-call --local --file-root="$(pwd)/salt" state.apply -l info --out=highstate --force-color
 
 echo "✅ System state applied successfully!"

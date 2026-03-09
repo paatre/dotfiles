@@ -1,0 +1,51 @@
+include:
+  - repos
+
+install_core_packages:
+  pkg.installed:
+    - pkgs:
+      - btop
+      - cargo
+      - code
+      - containerd.io
+      - curl
+      - docker-buildx-plugin
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose-plugin
+      - firefox
+      - firefox-nightly
+      - flameshot
+      - fonts-cascadia-code
+      - fonts-firacode
+      - fonts-powerline
+      - fzf
+      - git
+      - git-delta
+      - git-filter-repo
+      - gnome-tweaks
+      - google-chrome-stable
+      - google-cloud-cli
+      - jq
+      - lxc
+      - ncdu
+      - neovim
+      - pass
+      - ripgrep
+      - stow
+      - tailscale
+      - tealdeer
+      - tmux
+      - unzip
+      - whois
+      - wl-clipboard
+      - zoxide
+    - require:
+      - file: chrome_repo
+      - file: google_cloud_repo
+      - file: mozilla_repo
+      - file: tailscale_repo
+      - file: vscode_repo
+      - pkgrepo: cappelikan_ppa
+      - pkgrepo: git_ppa
+      - pkgrepo: nvim_ppa
