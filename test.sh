@@ -25,7 +25,7 @@ while ! lxc exec "$CONTAINER_NAME" -- ping -c 1 -W 1 google.com >/dev/null 2>&1;
         exit 1
     fi
 done
-echo -e "✨ Online!"
+echo -e "\n✨ Online!"
 
 echo "📤 Pushing dotfiles and setup.sls..."
 lxc file push -r "$DOTFILES_DIR" "$CONTAINER_NAME/root/"
