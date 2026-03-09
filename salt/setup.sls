@@ -131,7 +131,7 @@ install_core_packages:
       - ripgrep
       - stow
       - tailscale
-      - tldr
+      - tealdeer
       - tmux
       - unzip
       - whois
