@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CONTAINER_NAME="setup-test-fresh"
-IMAGE="ubuntu:24.04"
+IMAGE="ubuntu:25.10"
 DOTFILES_DIR="$HOME/dotfiles"
 
 echo "🚀 Starting Fresh LXC Test..."
