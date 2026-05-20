@@ -173,6 +173,8 @@ alias ai='ollama run llama3.1'
 
 alias dotfiles='cd ~/dotfiles'
 
+alias full-mr='glab mr view && glab mr diff'
+
 alias bashrc='nvim ~/.bashrc'
 alias gitconfig='nvim ~/.gitconfig'
 alias nv='nvim ~/.config/nvim/init.lua'
