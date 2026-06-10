@@ -112,6 +112,33 @@ fi
 unset PREPEND_PATHS SYSTEM_GO_BIN GOPATH_BIN
 
 #
+# Functions
+#
+dca() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: dca [command] (e.g., dca up -d, dca down)"
+        return 1
+    fi
+
+    local compose_args=()
+
+    # Read all found files (.yml and .yaml) into an array, prefixing each with -f
+    while IFS= read -r file; do
+        compose_args+=("-f" "$file")
+    done < <(fd -I "docker-compose\.ya?ml$")
+
+    if [ ${#compose_args[@]} -eq 0 ]; then
+        echo "No docker-compose files found."
+        return 1
+    fi
+
+    echo "Executing: docker compose ${compose_args[@]} $@"
+    echo "-----------------------------------------------"
+
+    docker compose "${compose_args[@]}" "$@"
+}
+
+#
 # Aliases
 #
 
@@ -139,30 +166,6 @@ alias cal="if [ -t 1 ] ; then ncal -b ; else /usr/bin/cal ; fi"
 
 alias '?'=duck
 alias '??'=google
-
-dca() {
-    if [ $# -eq 0 ]; then
-        echo "Usage: dca [command] (e.g., dca up -d, dca down)"
-        return 1
-    fi
-
-    local compose_args=()
-
-    # Read all found files (.yml and .yaml) into an array, prefixing each with -f
-    while IFS= read -r file; do
-        compose_args+=("-f" "$file")
-    done < <(fd -I "docker-compose\.ya?ml$")
-
-    if [ ${#compose_args[@]} -eq 0 ]; then
-        echo "No docker-compose files found."
-        return 1
-    fi
-
-    echo "Executing: docker compose ${compose_args[@]} $@"
-    echo "-----------------------------------------------"
-
-    docker compose "${compose_args[@]}" "$@"
-}
 
 alias dc='docker compose'
 alias dts=docker-tmux-setup
