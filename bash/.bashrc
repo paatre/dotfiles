@@ -288,3 +288,11 @@ eval "$(pyenv init -)"
 # Zoxide settings
 #
 eval "$(zoxide init --cmd cd bash)"
+
+# pnpm
+export PNPM_HOME="/home/tiikeri/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
