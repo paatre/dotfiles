@@ -138,6 +138,18 @@ dca() {
     docker compose "${compose_args[@]}" "$@"
 }
 
+pkglook() {
+    # 1. apt-cache pkgnames provides the list
+    # 2. sort ensures it's alphabetical
+    # 3. fzf handles the interactive fuzzy finding and color-coded preview
+    apt-cache pkgnames | sort | fzf \
+        --prompt="Search Packages ❯ " \
+        --height=90% --layout=reverse --border \
+        --color=header:italic,spinner:cyan,pointer:red,marker:green,prompt:blue \
+        --preview 'apt show {} 2>/dev/null | sed -n "/^Description:/,\$p"' \
+        --preview-window=right:60%:wrap
+}
+
 #
 # Aliases
 #
