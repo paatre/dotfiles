@@ -23,7 +23,6 @@
 #   -b, --build      Rebuild the Docker images"
 #   -e, --editor     Specify the editor to use (default: \$EDITOR)"
 #   -h, --help       Display this help message"
-#   -i, --infra      Specify Haltu infra version"
 #   -s, --service    Specify the Docker service name (default: runserver)"
 #   -v, --vite       Include Vite development server pane"
 #
@@ -58,7 +57,6 @@ usage() {
     echo "  -b, --build      Rebuild the Docker images"
     echo "  -e, --editor     Specify the editor to use (default: \$EDITOR)"
     echo "  -h, --help       Display this help message"
-    echo "  -i, --infra      Specify Haltu infra version"
     echo "  -s, --service    Specify the Docker service name (default: runserver)"
     echo "  -v, --vite       Include Vite development server pane"
     exit 1
@@ -68,7 +66,6 @@ usage() {
 BUILD_CONTAINERS=false
 EDITOR_CMD="${EDITOR:-}"
 INCLUDE_VITE=false
-INFRA_VERSION="lilium"
 SERVICE_NAME="runserver"
 
 # Parse command-line arguments
@@ -88,15 +85,6 @@ while [[ "$#" -gt 0 ]]; do # $# expands to the number of positional arguments
             ;;
         -h|--help)
             usage
-            ;;
-        -i|--infra)
-            if [[ -n "$2" && ! "$2" =~ ^- ]]; then
-                INFRA_VERSION="$2"
-                shift
-            else
-                echo "Error: --infra requires a non-empty option argument."
-                exit 1
-            fi
             ;;
         -s|--service)
             if [[ -n "$2" && ! "$2" =~ ^- ]]; then
@@ -138,18 +126,6 @@ fi
 
 tmux split-window -h
 
-# Pull newest Haltu Kehys image
-pull_command=""
-if [ "$BUILD_CONTAINERS" = true ]; then
-    pull_command="docker pull docker.haltu.net/haltu/env/$INFRA_VERSION:develop && "
-fi
-
-# Create the proper infra-specific local_settings files
-local_settings_command=""
-if [ "$BUILD_CONTAINERS" = true ]; then
-    local_settings_command="docker compose run $SERVICE_NAME bash -c 'cp -n ../local_settings.py local_settings_$INFRA_VERSION.py; cp -n local_settings.py.tpl_dev local_settings.py' && "
-fi
-
 # Run the containers
 up_command="docker compose up"
 if [ "$BUILD_CONTAINERS" = true ]; then
@@ -159,7 +135,7 @@ fi
 up_command+=" --remove-orphans"
 
 # Build the full command
-full_command="${pull_command}${local_settings_command}${up_command}"
+full_command="${up_command}"
 
 # Send the full command to tmux
 tmux send-keys "$full_command" C-m
