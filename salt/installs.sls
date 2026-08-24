@@ -46,7 +46,7 @@ install_ollama:
 
 install_opencode:
   cmd.run:
-    - name: "curl -fsSL https://opencode.ai/install.sh | bash"
+    - name: "curl -fsSL https://opencode.ai/install | bash"
     - creates: /usr/local/bin/opencode
 
 download_glab:
