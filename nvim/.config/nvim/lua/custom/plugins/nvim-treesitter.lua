@@ -18,6 +18,7 @@ return {
 			"c",
 			"diff",
 			"git_config",
+			"gitcommit",
 			"html",
 			"lua",
 			"luadoc",
