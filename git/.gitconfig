@@ -4,5 +4,6 @@
 [includeIf "gitdir:~/Projects/paatre/**"]
     path = ~/.gitconfig-paatre
 
-[includeIf "gitdir:~/Projects/haltu/**"]
-    path = ~/.gitconfig-haltu
+[user]
+    email = tepavi@gmail.com
+    name = Teemu Viikeri
