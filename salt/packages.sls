@@ -20,6 +20,7 @@ install_core_packages:
       - fonts-firacode
       - fonts-powerline
       - fzf
+      - gh
       - git
       - git-delta
       - git-filter-repo
@@ -42,6 +43,7 @@ install_core_packages:
       - zoxide
     - require:
       - file: chrome_repo
+      - file: github_cli_repo
       - file: google_cloud_repo
       - file: mozilla_repo
       - file: tailscale_repo

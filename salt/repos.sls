@@ -29,6 +29,18 @@ docker_repo:
     - require:
       - cmd: docker_key
 
+github_cli_key:
+  cmd.run:
+    - name: "curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /usr/share/keyrings/githubcli-archive-keyring.gpg >/dev/null"
+    - creates: /usr/share/keyrings/githubcli-archive-keyring.gpg
+
+github_cli_repo:
+  file.managed:
+    - name: /etc/apt/sources.list.d/github-cli.list
+    - contents: "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+    - require:
+      - cmd: github_cli_key
+
 google_cloud_repo:
   cmd.run:
     - name: "curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg"
