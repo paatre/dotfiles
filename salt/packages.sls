@@ -25,12 +25,15 @@ install_core_packages:
       - git-delta
       - git-filter-repo
       - gnome-tweaks
+      - golang-go
       - google-chrome-stable
       - google-cloud-cli
       - jq
       - lxc
       - ncdu
       - neovim
+      - nodejs
+      - npm
       - pass
       - ripgrep
       - stow
