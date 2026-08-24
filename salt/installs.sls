@@ -90,3 +90,9 @@ install_aws_cli:
     - creates: /usr/local/bin/aws
     - require:
       - archive: extract_aws_cli
+
+install_tpm:
+  cmd.run:
+    - name: 'git clone https://github.com/tmux-plugins/tpm {{ home }}/.tmux/plugins/tpm'
+    - runas: {{ user }}
+    - creates: {{ home }}/.tmux/plugins/tpm
