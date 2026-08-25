@@ -1,8 +1,20 @@
 #!/bin/bash
+set -euo pipefail
 
 CONTAINER_NAME="setup-test-fresh"
 IMAGE="ubuntu:25.10"
 DOTFILES_DIR="$HOME/dotfiles"
+STATE="${1:-}"
+
+if [ $# -gt 1 ]; then
+    echo "Usage: ./test.sh [state]"
+    exit 1
+fi
+
+if [ -n "$STATE" ] && [[ ! "$STATE" =~ ^[A-Za-z0-9_.-]+$ ]]; then
+    echo "Invalid state name: $STATE"
+    exit 1
+fi
 
 echo "🚀 Starting Fresh LXC Test..."
 
@@ -30,8 +42,13 @@ echo -e "\n✨ Online!"
 echo "📤 Pushing dotfiles and setup.sls..."
 lxc file push -r "$DOTFILES_DIR" "$CONTAINER_NAME/root/"
 
-echo "⚡ Running Bootstrap..."
-lxc exec "$CONTAINER_NAME" -- bash -c "cd /root/dotfiles && chmod +x bootstrap.sh && ./bootstrap.sh"
+if [ -n "$STATE" ]; then
+    echo "⚡ Installing Salt and dry-running state: $STATE"
+    lxc exec "$CONTAINER_NAME" -- bash -c 'cd /root/dotfiles && chmod +x bootstrap.sh salt-local.sh && ./bootstrap.sh --salt-only && ./salt-local.sh test "$1"' -- "$STATE"
+else
+    echo "⚡ Running Bootstrap..."
+    lxc exec "$CONTAINER_NAME" -- bash -c "cd /root/dotfiles && chmod +x bootstrap.sh salt-local.sh && ./bootstrap.sh"
+fi
 
 echo "✅ Deployment Complete!"
 echo "💻 Enter the container with: lxc exec $CONTAINER_NAME -- bash"

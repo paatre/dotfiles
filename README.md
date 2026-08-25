@@ -37,12 +37,40 @@ cd ~/dotfiles
 ./bootstrap.sh
 ```
 
+To work on one Salt state at a time, use `salt-local.sh` from the repository root:
+
+```bash
+./salt-local.sh render repos
+./salt-local.sh test repos
+./salt-local.sh apply repos
+./salt-local.sh highstate
+```
+
+`render` shows the compiled Salt state, `test` runs Salt's dry-run mode, `apply` applies a single state, and `highstate` applies the same full state set as `bootstrap.sh`.
+
+The Salt states are split into smaller modules, so individual pieces can be checked directly:
+
+```bash
+./salt-local.sh test repos.docker
+./salt-local.sh test packages.containers
+./salt-local.sh test installs.nvm
+./salt-local.sh test system.dotfiles
+```
+
 ## Testing with LXC
 
 Before deploying changes to your host machine, you can test the bootstrapping process in an isolated LXC container using `test.sh`. This spins up a fresh Ubuntu container, copies the dotfiles, and runs the bootstrap script inside it.
 
 ```bash
 ./test.sh
+```
+
+Pass a Salt state name to test a single state in a fresh container. Targeted state tests are dry-runs by default:
+
+```bash
+./test.sh repos
+./test.sh installs.nvm
+./test.sh system.dotfiles
 ```
 
 Once the test completes, you can inspect the container:

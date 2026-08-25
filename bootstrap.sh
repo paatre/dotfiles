@@ -1,28 +1,50 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
 echo "🚀 Bootstrapping the system..."
 
-# 1. Install Salt Minion from official Salt Project repo
-if ! command -v salt-call &> /dev/null; then
-    echo "Adding Salt Project repository..."
-    sudo mkdir -m 755 -p /etc/apt/keyrings
+as_root() {
+    if [ "$(id -u)" -eq 0 ]; then
+        "$@"
+    else
+        sudo "$@"
+    fi
+}
 
-    # Download the key and the source list
-    curl -fsSL https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public | gpg --dearmor | sudo tee /etc/apt/keyrings/salt-archive-keyring.pgp > /dev/null
-    curl -fsSL https://github.com/saltstack/salt-install-guide/releases/latest/download/salt.sources | sudo tee /etc/apt/sources.list.d/salt.sources
+ensure_salt_installed() {
+    if command -v salt-call &> /dev/null; then
+        return
+    fi
+
+    echo "Adding Salt Project repository..."
+    as_root mkdir -m 755 -p /etc/apt/keyrings
+    curl -fsSL https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public | gpg --dearmor | as_root tee /etc/apt/keyrings/salt-archive-keyring.pgp > /dev/null
+    curl -fsSL https://github.com/saltstack/salt-install-guide/releases/latest/download/salt.sources | as_root tee /etc/apt/sources.list.d/salt.sources
 
     echo "Installing Salt..."
-    sudo apt update
-    sudo apt install -y salt-minion
+    as_root apt update
+    as_root apt install -y salt-minion
+}
+
+if [ "${1:-}" = "--salt-only" ]; then
+    ensure_salt_installed
+    echo "✅ Salt installed successfully!"
+    exit 0
 fi
 
-# 2. Run Salt in Masterless mode (--local)
-# We pass the current directory's 'salt' folder as the file root
+if [ $# -ne 0 ]; then
+    echo "Usage: ./bootstrap.sh [--salt-only]"
+    exit 1
+fi
+
+ensure_salt_installed
+
 export SUDO_USER_HOME=$HOME
-sudo --preserve-env=SUDO_USER_HOME salt-call --local --file-root="$(pwd)/salt" state.apply -l info --out=highstate --force-color
+"$REPO_ROOT/salt-local.sh" highstate
 
 echo "✅ System state applied successfully!"

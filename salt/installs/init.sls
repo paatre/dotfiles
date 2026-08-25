@@ -1,0 +1,12 @@
+include:
+  - installs.starship
+  - installs.nvm
+  - installs.pyenv
+  - installs.deno
+  - installs.pulumi
+  - installs.ollama
+  - installs.opencode
+  - installs.glab
+  - installs.slack
+  - installs.aws
+  - installs.tpm
