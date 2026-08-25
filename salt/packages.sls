@@ -13,6 +13,7 @@ install_core_packages:
       - docker-ce
       - docker-ce-cli
       - docker-compose-plugin
+      - fd-find
       - firefox
       - firefox-nightly
       - flameshot

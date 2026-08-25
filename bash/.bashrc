@@ -163,6 +163,8 @@ alias kernel='uname -sr'
 
 alias python=python3
 
+alias fd='fdfind'
+
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
