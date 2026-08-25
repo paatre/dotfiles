@@ -70,3 +70,12 @@ configure_ptyxis:
     - runas: {{ user }}
     - require:
       - cmd: deploy_dotfiles
+
+setup_docker_permissions:
+  cmd.run:
+    - name: |
+        groupadd -f docker
+        usermod -aG docker {{ user }}
+        newgrp docker
+    - require:
+      - pkg: install_core_packages

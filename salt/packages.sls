@@ -42,6 +42,7 @@ install_core_packages:
       - tealdeer
       - tmux
       - unzip
+      - util-linux-extra
       - whois
       - wl-clipboard
       - zoxide
