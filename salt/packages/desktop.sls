@@ -2,7 +2,7 @@ include:
   - repos.chrome
   - repos.mozilla
   - repos.vscode
-  - repos.ppas
+  - repos.cappelikan_ppa
 
 install_desktop_packages:
   pkg.installed:
@@ -17,4 +17,4 @@ install_desktop_packages:
       - file: chrome_repo
       - file: mozilla_repo
       - file: vscode_repo
-      - pkgrepo: cappelikan_ppa
+      - file: cappelikan_ppa

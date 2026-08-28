@@ -1,11 +1,4 @@
-cappelikan_ppa:
-  pkgrepo.managed:
-    - name: ppa:cappelikan/ppa
-
-git_ppa:
-  pkgrepo.managed:
-    - name: ppa:git-core/ppa
-
-nvim_ppa:
-  pkgrepo.managed:
-    - name: ppa:neovim-ppa/unstable
+include:
+  - repos.cappelikan_ppa
+  - repos.git_ppa
+  - repos.neovim_ppa

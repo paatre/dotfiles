@@ -1,6 +1,7 @@
 include:
   - repos.github_cli
-  - repos.ppas
+  - repos.git_ppa
+  - repos.neovim_ppa
 
 install_dev_packages:
   pkg.installed:
@@ -16,5 +17,5 @@ install_dev_packages:
       - npm
     - require:
       - file: github_cli_repo
-      - pkgrepo: git_ppa
-      - pkgrepo: nvim_ppa
+      - file: git_ppa
+      - file: nvim_ppa
