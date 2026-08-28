@@ -5,6 +5,7 @@ configure_ptyxis:
     - name: |
         gsettings set org.gnome.Ptyxis font-name 'Cascadia Mono NF 12'
         gsettings set org.gnome.Ptyxis use-system-font false
+        gsettings set org.gnome.Ptyxis audible-bell false
         DEFAULT_UUID=$(gsettings get org.gnome.Ptyxis default-profile-uuid | tr -d "'")
         gsettings set org.gnome.Ptyxis.Profile:/org/gnome/Ptyxis/Profiles/$DEFAULT_UUID/ custom-command 'tmux'
         gsettings set org.gnome.Ptyxis.Profile:/org/gnome/Ptyxis/Profiles/$DEFAULT_UUID/ label 'Default'
