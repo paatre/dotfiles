@@ -3,7 +3,7 @@
 -- This enables advanced features such as:
 -- Syntax highlighting
 -- Code folding
--- Incremental selection 
+-- Incremental selection
 -- etc.
 -- Tree-sitter parses code incrementally as you type, which means it can provide real-time feedback and updates to the syntax tree.
 --
