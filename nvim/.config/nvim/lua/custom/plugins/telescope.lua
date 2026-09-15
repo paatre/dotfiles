@@ -24,8 +24,11 @@ return {
 				-- hidden, so without this most of the dotfiles repo is unreachable.
 				-- The noise that comes with it is scoped in ~/.config/fd/ignore.
 				find_files = { hidden = true },
-				-- ripgrep does not read fd's ignore file and descends into .git.
-				live_grep = { additional_args = { "--hidden", "--glob=!.git/*" } },
+				-- ripgrep does not read fd's ignore file, so it needs .git excluded
+				-- here. grep_string is a separate picker from live_grep and inherits
+				-- nothing from it; it also has no `glob_pattern` option of its own.
+				live_grep = { hidden = true, glob_pattern = "!.git/*" },
+				grep_string = { hidden = true, additional_args = { "--glob=!.git/*" } },
 			},
 			extensions = {
 				["ui-select"] = {
