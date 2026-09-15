@@ -34,6 +34,7 @@ return {
 			scss = { "prettierd" },
 			html = { "prettierd" },
 			htmldjango = { "djlint" },
+			go = { "goimports", "gofumpt" },
 		},
 		formatters = {
 			-- djlint defaults to its html profile, which does not know Django's

@@ -91,7 +91,20 @@ return {
 					},
 				},
 			},
-			gopls = {},
+			gopls = {
+				settings = {
+					gopls = {
+						-- Match the gofumpt formatting conform applies on save
+						gofumpt = true,
+						staticcheck = true,
+						analyses = {
+							nilness = true,
+							unusedparams = true,
+							unusedwrite = true,
+						},
+					},
+				},
+			},
 			ts_ls = {},
 			-- pyright does types, hover and completion; ruff does linting,
 			-- formatting and imports. Each gives up what the other is better at.
@@ -140,6 +153,8 @@ return {
 				"stylua", -- Used to format Lua code
 				"prettierd", -- Used to format JS/TS and JSON
 				"djlint", -- Used to format Django templates
+				"goimports", -- Used to fix up Go imports
+				"gofumpt", -- Used to format Go
 			}),
 		})
 
