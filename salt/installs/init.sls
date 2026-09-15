@@ -6,6 +6,7 @@ include:
   - installs.pulumi
   - installs.ollama
   - installs.opencode
+  - installs.tree_sitter_cli
   - installs.glab
   - installs.slack
   - installs.aws
