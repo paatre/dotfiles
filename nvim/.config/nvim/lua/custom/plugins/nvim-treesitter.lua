@@ -13,7 +13,7 @@ return {
 	"nvim-treesitter/nvim-treesitter",
 	lazy = false,
 	build = ":TSUpdate",
-	config = function(_, opts)
+	config = function()
 		require("nvim-treesitter").setup()
 
 		local ts = require("nvim-treesitter")
