@@ -95,9 +95,13 @@ return {
 			ts_ls = {},
 			pyright = {},
 			ruff = {},
+			html = {},
+			cssls = {},
+			-- Emmet is only wanted in markup, not in every filetype it offers
 			emmet_ls = {
 				filetypes = {
 					"html",
+					"htmldjango",
 				},
 			},
 		}

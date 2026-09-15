@@ -30,6 +30,9 @@ return {
 			typescriptreact = { "prettierd" },
 			json = { "prettierd" },
 			jsonc = { "prettierd" },
+			css = { "prettierd" },
+			scss = { "prettierd" },
+			html = { "prettierd" },
 		},
 	},
 }
