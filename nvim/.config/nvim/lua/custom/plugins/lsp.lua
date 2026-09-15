@@ -92,6 +92,7 @@ return {
 				},
 			},
 			gopls = {},
+			ts_ls = {},
 			pyright = {},
 			ruff = {},
 			emmet_ls = {
@@ -114,6 +115,7 @@ return {
 		require("mason-tool-installer").setup({
 			ensure_installed = vim.list_extend(vim.tbl_keys(servers), {
 				"stylua", -- Used to format Lua code
+				"prettierd", -- Used to format JS/TS and JSON
 			}),
 		})
 
