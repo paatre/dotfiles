@@ -93,8 +93,20 @@ return {
 			},
 			gopls = {},
 			ts_ls = {},
-			pyright = {},
-			ruff = {},
+			-- pyright does types, hover and completion; ruff does linting,
+			-- formatting and imports. Each gives up what the other is better at.
+			pyright = {
+				settings = {
+					pyright = {
+						disableOrganizeImports = true,
+					},
+				},
+			},
+			ruff = {
+				on_attach = function(client)
+					client.server_capabilities.hoverProvider = false
+				end,
+			},
 			html = {},
 			-- Django templates: lspconfig defaults djlsp to html as well, but Neovim
 			-- detects Django markup as htmldjango, so plain HTML is left to html.
