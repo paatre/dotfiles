@@ -19,6 +19,14 @@ return {
 	},
 	config = function()
 		require("telescope").setup({
+			pickers = {
+				-- Config files usually live under a `.config/` path, which fd treats as
+				-- hidden, so without this most of the dotfiles repo is unreachable.
+				-- The noise that comes with it is scoped in ~/.config/fd/ignore.
+				find_files = { hidden = true },
+				-- ripgrep does not read fd's ignore file and descends into .git.
+				live_grep = { additional_args = { "--hidden", "--glob=!.git/*" } },
+			},
 			extensions = {
 				["ui-select"] = {
 					require("telescope.themes").get_dropdown(),

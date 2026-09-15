@@ -1,1 +1,20 @@
 .git
+
+# Caches and package-manager stores
+.cache/
+.npm/
+.local/share/
+node_modules/
+__pycache__/
+.venv/
+
+# Language version managers
+.nvm/
+.pyenv/
+
+# Application data that happens to live under ~/.config
+**/.config/1Password/
+**/.config/Claude/
+**/.config/Slack/
+**/.config/google-chrome/
+**/.config/opencode/
