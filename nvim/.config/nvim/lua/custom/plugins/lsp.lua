@@ -13,52 +13,37 @@ return {
 		{ "folke/lazydev.nvim", ft = "lua" },
 	},
 	config = function()
-		--  This function gets run when an LSP attaches to a particular buffer
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 			callback = function(event)
-				-- More easily define mappings specific for LSP related items.
-				-- It sets the mode, buffer and description for us each time.
 				local map = function(keys, func, desc)
 					vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 				end
 
-				-- Jump to the definition of the word under your cursor.
 				map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
 
-				-- Find references for the word under your cursor.
 				map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 
-				-- Jump to the implementation of the word under your cursor.
 				map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
 
-				-- Jump to the type of the word under your cursor.
 				map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
 
-				-- Fuzzy find all the symbols in your current document.
 				map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
 
-				-- Fuzzy find all the symbols in your current workspace.
 				map(
 					"<leader>ws",
 					require("telescope.builtin").lsp_dynamic_workspace_symbols,
 					"[W]orkspace [S]ymbols"
 				)
 
-				-- Rename the variable under your cursor.
 				map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 
-				-- Execute a code action, usually your cursor needs to be on top of an error
-				-- or a suggestion from your LSP for this to activate.
 				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
-				-- Opens a popup that displays documentation about the word under your cursor
 				map("K", vim.lsp.buf.hover, "Hover Documentation")
 
-				-- Jump to the declaration of the word under your cursor.
 				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
-				-- When you move your cursor, the highlights will be cleared (the second autocommand).
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
 				if client and client.server_capabilities.documentHighlightProvider then
 					local highlight_augroup =
@@ -113,18 +98,7 @@ return {
 				},
 			},
 			gopls = {},
-			pyright = {
-				-- before_init = function(params)
-				-- 	params.processId = vim.NIL
-				-- end,
-				-- cmd = {
-				--   "docker", "exec", "-i",
-				--   "runserver",
-				--   "/home/bew/.venv/bin/pyright-langserver",
-				--   "--stdio"
-				-- },
-				-- root_dir = require("lspconfig/util").root_pattern(".git", "manage.py", vim.fn.getcwd()),
-			},
+			pyright = {},
 			ruff = {
 				cmd = { "ruff-lsp" },
 				filetypes = { "python" },
@@ -138,10 +112,8 @@ return {
 
 		require("mason").setup()
 
-		-- This will ensure that the servers listed above are installed
 		local ensure_installed = vim.tbl_keys(servers or {})
 
-		-- Add additional tools that are not LSP servers but are useful for development
 		vim.list_extend(ensure_installed, {
 			"stylua", -- Used to format Lua code
 		})
