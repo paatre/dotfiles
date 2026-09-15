@@ -66,11 +66,6 @@ Two consequences that are not visible from the directory tree:
 
 Kickstart-derived. `init.lua` holds options, keymaps and the lazy.nvim bootstrap, then `{ import = "custom.plugins" }` auto-loads **every** file in `lua/custom/plugins/` — each returns one lazy spec, and there is no central plugin registry to update when adding a file.
 
-- `lua/kickstart/plugins/*` are unreferenced leftovers; nothing requires them.
-- **nvim-treesitter is on `branch = "main"`**, whose API is `require("nvim-treesitter").install()` / `.get_installed()`. The legacy `nvim-treesitter.configs` and `nvim-treesitter.parsers` modules do not exist on that branch, so any plugin calling them errors — this is why `telescope.nvim` is pinned to `master` rather than `0.1.x`.
-- It also requires `tree-sitter-cli >= 0.26.1`, which Ubuntu does not ship; `installs/tree_sitter_cli.sls` installs it from npm (prebuilt binary) and purges the apt package.
-- Formatting is conform.nvim with `format_on_save`. **StyLua defaults to tabs** and there is no `stylua.toml`, so Lua files are tab-indented despite `init.lua` setting `expandtab`. `lua/custom/plugins/lsp.lua` has known pre-existing StyLua drift (two hand-wrapped calls) — don't let a reformat of it ride along in an unrelated commit.
-
 ## Bash config
 
 `bash/.profile` is 17 lines whose only job is sourcing `.bashrc` for login shells (ssh, `su -`, TTY) — bash does not read `.bashrc` itself in a login shell, and there is no `.bash_profile`. All PATH construction lives in one `PREPEND_PATHS` block in `bash/.bashrc`; don't add PATH entries to `.profile`.
