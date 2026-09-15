@@ -2,6 +2,10 @@
 
 return {
 	"stevearc/conform.nvim",
+	-- format_on_save is registered by conform's setup(), so the plugin has to be
+	-- loaded before a write rather than on first use of the keymap below.
+	event = { "BufWritePre" },
+	cmd = { "ConformInfo" },
 	keys = {
 		{
 			"<leader>f",
@@ -15,7 +19,7 @@ return {
 	opts = {
 		format_on_save = {
 			timeout_ms = 500,
-			lsp_fallback = true,
+			lsp_format = "fallback",
 		},
 		formatters_by_ft = {
 			lua = { "stylua" },
