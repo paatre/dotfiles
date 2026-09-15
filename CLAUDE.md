@@ -83,4 +83,5 @@ Note that GNOME's Wayland session does not source `~/.profile`, so nothing in th
 ## Conventions
 
 - Prefer **atomic commits**: one concern each, rather than a single commit spanning unrelated cleanups. Work is often tracked as GitHub issues, so reference them with `Closes #N` / `Refs #N` — and use `Refs` when only part of an issue's scope is addressed.
+- Shorter commit messages before the `Closes`/`Refs` at the end are preferred. No need to explain every part of the change and its verification, just the core.
 - Do not co-author Claude in the commit.
