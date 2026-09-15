@@ -99,10 +99,7 @@ return {
 			},
 			gopls = {},
 			pyright = {},
-			ruff = {
-				cmd = { "ruff-lsp" },
-				filetypes = { "python" },
-			},
+			ruff = {},
 			emmet_ls = {
 				filetypes = {
 					"html",
@@ -110,28 +107,24 @@ return {
 			},
 		}
 
+		-- mason-lspconfig only installs and enables servers; per-server settings are
+		-- registered natively, and merged over what nvim-lspconfig ships in `lsp/`.
+		vim.lsp.config("*", { capabilities = capabilities })
+
+		for name, config in pairs(servers) do
+			vim.lsp.config(name, config)
+		end
+
 		require("mason").setup()
 
-		local ensure_installed = vim.tbl_keys(servers or {})
-
-		vim.list_extend(ensure_installed, {
-			"stylua", -- Used to format Lua code
+		require("mason-tool-installer").setup({
+			ensure_installed = vim.list_extend(vim.tbl_keys(servers), {
+				"stylua", -- Used to format Lua code
+			}),
 		})
-		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 		require("mason-lspconfig").setup({
-			automatic_installation = true,
-			ensure_installed = ensure_installed,
-			handlers = {
-				function(server_name)
-					local server = servers[server_name] or {}
-					-- This handles overriding only values explicitly passed
-					-- by the server configuration above. Useful when disabling
-					-- certain features of an LSP (for example, turning off formatting for tsserver)
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					require("lspconfig")[server_name].setup(server)
-				end,
-			},
+			ensure_installed = vim.tbl_keys(servers),
 		})
 	end,
 }
