@@ -96,6 +96,13 @@ return {
 			pyright = {},
 			ruff = {},
 			html = {},
+			-- Django templates: lspconfig defaults djlsp to html as well, but Neovim
+			-- detects Django markup as htmldjango, so plain HTML is left to html.
+			djlsp = {
+				filetypes = {
+					"htmldjango",
+				},
+			},
 			cssls = {},
 			-- Emmet is only wanted in markup, not in every filetype it offers
 			emmet_ls = {
@@ -120,6 +127,7 @@ return {
 			ensure_installed = vim.list_extend(vim.tbl_keys(servers), {
 				"stylua", -- Used to format Lua code
 				"prettierd", -- Used to format JS/TS and JSON
+				"djlint", -- Used to format Django templates
 			}),
 		})
 

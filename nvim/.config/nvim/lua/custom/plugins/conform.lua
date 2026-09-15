@@ -33,6 +33,14 @@ return {
 			css = { "prettierd" },
 			scss = { "prettierd" },
 			html = { "prettierd" },
+			htmldjango = { "djlint" },
+		},
+		formatters = {
+			-- djlint defaults to its html profile, which does not know Django's
+			-- block tags; htmldjango is the only filetype mapped to it here.
+			djlint = {
+				prepend_args = { "--profile=django" },
+			},
 		},
 	},
 }
