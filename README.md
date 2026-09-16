@@ -79,10 +79,14 @@ Tags mirror the Salt state names, so a single piece can be targeted the same way
 ./ansible-local.sh check repos,packages
 ```
 
-Tasks that touch the system escalate with `become`, and `apply` asks for the
-sudo password once. Tasks that configure the user's desktop or home directory
-run unprivileged, so `check` and `apply` of tags like `keyboard`, `ptyxis` or
-`dotfiles` need no password at all.
+Tasks that touch the system escalate with `become`, so a sudo password is asked
+for unless sudo is already cached. Tags that only configure the user's desktop
+or home directory need no privileges at all, and `--no-pass` skips the prompt
+for those:
+
+```bash
+./ansible-local.sh check keyboard --no-pass
+```
 
 Two differences from the Salt states are deliberate:
 
