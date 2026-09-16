@@ -2,7 +2,10 @@
 -- Currently, this mini.nvim configuration includes:
 -- 1. mini.ai: Better text objects for around/inside text.
 -- 2. mini.surround: Add/delete/replace surroundings (brackets, quotes, etc.).
--- 3. mini.statusline: A simple and easy statusline.
+-- 3. mini.pairs: Autopair brackets and quotes while typing.
+-- 4. mini.move: Move lines and visual selections around.
+-- 5. mini.splitjoin: Split or join argument lists.
+-- 6. mini.statusline: A simple and easy statusline.
 --
 -- Check out other mini plugins at https://github.com/echasnovski/mini.nvim
 
@@ -23,6 +26,20 @@ return {
 		-- - sd'   - [S]urround [D]elete [']quotes
 		-- - sr)'  - [S]urround [R]eplace [)] [']
 		require("mini.surround").setup()
+
+		-- Autopair brackets and quotes.
+		--
+		-- <CR> between a pair opens an indented line, but only because nothing
+		-- else maps it in insert mode -- mini.pairs leaves an existing mapping be.
+		require("mini.pairs").setup()
+
+		-- Move lines and visual selections with Alt + hjkl.
+		require("mini.move").setup()
+
+		-- Split or join the argument list under the cursor.
+		--
+		-- - gS - toggle between one line and one argument per line
+		require("mini.splitjoin").setup()
 
 		-- Simple and easy statusline.
 		--  You could remove this setup call if you don't like it,
