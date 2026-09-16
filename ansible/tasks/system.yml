@@ -36,7 +36,7 @@
 
 - name: Remove the stock dotfiles that stow would collide with
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ item }}"
+    path: "{{ ansible_facts.env.HOME }}/{{ item }}"
     state: absent
   loop:
     - .bashrc
@@ -48,16 +48,17 @@
 
 - name: Work out whether stow has anything to do
   ansible.builtin.command:
-    cmd: "stow -R --simulate --verbose=1 -t {{ ansible_env.HOME }} {{ stow_packages | join(' ') }}"
-    chdir: "{{ ansible_env.HOME }}/dotfiles"
+    cmd: "stow -R --simulate --verbose=1 -t {{ ansible_facts.env.HOME }} {{ stow_packages | join(' ') }}"
+    chdir: "{{ ansible_facts.env.HOME }}/dotfiles"
   register: stow_simulate
   changed_when: false
+  check_mode: false
   tags: [dotfiles]
 
 - name: Stow the dotfile packages
   ansible.builtin.command:
-    cmd: "stow -R -t {{ ansible_env.HOME }} {{ stow_packages | join(' ') }}"
-    chdir: "{{ ansible_env.HOME }}/dotfiles"
+    cmd: "stow -R -t {{ ansible_facts.env.HOME }} {{ stow_packages | join(' ') }}"
+    chdir: "{{ ansible_facts.env.HOME }}/dotfiles"
   when: stow_simulate.stderr | length > 0
   tags: [dotfiles]
 
@@ -133,7 +134,7 @@
 - name: Add the user to the docker group
   become: true
   ansible.builtin.user:
-    name: "{{ ansible_user_id }}"
+    name: "{{ ansible_facts.user_id }}"
     groups: docker
     append: true
   tags: [docker]

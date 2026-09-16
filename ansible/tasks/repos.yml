@@ -31,7 +31,7 @@
   become: true
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/google-chrome.list
-    content: >-
+    content: >
       deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg]
       http://dl.google.com/linux/chrome/deb/ stable main
     owner: root
@@ -54,9 +54,9 @@
   become: true
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/docker.list
-    content: >-
+    content: >
       deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg]
-      https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+      https://download.docker.com/linux/ubuntu {{ ansible_facts.distribution_release }} stable
     owner: root
     group: root
     mode: "0644"
@@ -78,7 +78,7 @@
   become: true
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/github-cli.list
-    content: >-
+    content: >
       deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg]
       https://cli.github.com/packages stable main
     owner: root
@@ -101,7 +101,7 @@
   become: true
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/google-cloud-sdk.list
-    content: >-
+    content: >
       deb [signed-by=/usr/share/keyrings/cloud.google.gpg]
       https://packages.cloud.google.com/apt cloud-sdk main
     owner: root
@@ -124,7 +124,7 @@
   become: true
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/mozilla.list
-    content: >-
+    content: >
       deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.gpg]
       https://packages.mozilla.org/apt mozilla main
     owner: root
@@ -137,7 +137,7 @@
 - name: Add the Tailscale signing key
   become: true
   ansible.builtin.get_url:
-    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_distribution_release }}.noarmor.gpg"
+    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_facts.distribution_release }}.noarmor.gpg"
     dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
     owner: root
     group: root
@@ -148,9 +148,9 @@
   become: true
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/tailscale.list
-    content: >-
+    content: >
       deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg]
-      https://pkgs.tailscale.com/stable/ubuntu {{ ansible_distribution_release }} main
+      https://pkgs.tailscale.com/stable/ubuntu {{ ansible_facts.distribution_release }} main
     owner: root
     group: root
     mode: "0644"
@@ -207,11 +207,11 @@
 - name: Add the Launchpad PPA apt sources
   become: true
   ansible.builtin.copy:
-    dest: "/etc/apt/sources.list.d/{{ item.file }}-{{ ansible_distribution_release }}.sources"
+    dest: "/etc/apt/sources.list.d/{{ item.file }}-{{ ansible_facts.distribution_release }}.sources"
     content: |
       Types: deb
       URIs: {{ item.uri }}
-      Suites: {{ ansible_distribution_release }}
+      Suites: {{ ansible_facts.distribution_release }}
       Components: main
       Signed-By: /etc/apt/keyrings/{{ item.keyring }}.gpg
     owner: root

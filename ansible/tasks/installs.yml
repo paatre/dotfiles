@@ -13,25 +13,25 @@
 - name: Install nvm
   ansible.builtin.shell:
     cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+    creates: "{{ ansible_facts.env.HOME }}/.nvm/nvm.sh"
   tags: [nvm]
 
 - name: Install pyenv
   ansible.builtin.shell:
     cmd: curl https://pyenv.run | bash
-    creates: "{{ ansible_env.HOME }}/.pyenv/bin/pyenv"
+    creates: "{{ ansible_facts.env.HOME }}/.pyenv/bin/pyenv"
   tags: [pyenv]
 
 - name: Install deno
   ansible.builtin.shell:
     cmd: curl -fsSL https://deno.land/install.sh | sh
-    creates: "{{ ansible_env.HOME }}/.deno/bin/deno"
+    creates: "{{ ansible_facts.env.HOME }}/.deno/bin/deno"
   tags: [deno]
 
 - name: Install pulumi
   ansible.builtin.shell:
     cmd: curl -fsSL https://get.pulumi.com | sh
-    creates: "{{ ansible_env.HOME }}/.pulumi/bin/pulumi"
+    creates: "{{ ansible_facts.env.HOME }}/.pulumi/bin/pulumi"
   tags: [pulumi]
 
 - name: Install ollama
@@ -47,16 +47,15 @@
   tags: [ollama]
 
 - name: Install opencode
-  become: true
   ansible.builtin.shell:
     cmd: curl -fsSL https://opencode.ai/install | bash
-    creates: /usr/local/bin/opencode
+    creates: "{{ ansible_facts.env.HOME }}/.opencode/bin/opencode"
   tags: [opencode]
 
 - name: Install tpm
   ansible.builtin.git:
     repo: https://github.com/tmux-plugins/tpm
-    dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+    dest: "{{ ansible_facts.env.HOME }}/.tmux/plugins/tpm"
     version: master
     update: false
   tags: [tpm]
@@ -70,6 +69,7 @@
   register: tree_sitter_version
   changed_when: false
   failed_when: false
+  check_mode: false
   tags: [tree_sitter_cli]
 
 - name: Install tree-sitter-cli from npm
@@ -77,7 +77,7 @@
   ansible.builtin.command: npm install --global --no-fund --no-audit tree-sitter-cli
   when: >-
     tree_sitter_version.rc != 0
-    or tree_sitter_version.stdout.split(' ')[1] is version('0.26.1', '<')
+    or (tree_sitter_version.stdout | regex_search('[0-9]+[.][0-9]+[.][0-9]+')) is version('0.26.1', '<')
   tags: [tree_sitter_cli]
 
 # --- glab --------------------------------------------------------------------
