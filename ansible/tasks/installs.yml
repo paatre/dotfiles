@@ -46,6 +46,9 @@
   timeout: 600
   tags: [ollama]
 
+# The installer puts opencode in the user's home, not /usr/local/bin, so this
+# needs no become. salt/installs/opencode.sls guards on /usr/local/bin/opencode,
+# which never exists, and so reruns the installer on every highstate.
 - name: Install opencode
   ansible.builtin.shell:
     cmd: curl -fsSL https://opencode.ai/install | bash
