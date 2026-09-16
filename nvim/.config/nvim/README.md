@@ -59,6 +59,53 @@ Pyright and ruff deliberately give up what the other does better: pyright has
 Tool binaries come from Mason at `~/.local/share/nvim/mason/bin/`, which is on
 Neovim's `PATH` but not the shell's.
 
+## Projects whose dependencies live in a container
+
+Language servers here run on the host, so they need the project's dependencies
+on the host too. Nothing about this config is container-aware, and nothing needs
+to be: install the dependencies locally and everything works unchanged.
+
+**Node/TypeScript.** `ts_ls` reads `node_modules` and `tsconfig.json` from disk
+and never runs the code, so the container is irrelevant to it — type information
+is just `.d.ts` files, and the container's Node version, architecture and native
+binaries do not matter. Run the install on the host:
+
+```sh
+npm install   # or pnpm / yarn, from the project's lockfile
+```
+
+Without `node_modules` present, every import reports `Cannot find module`. With
+it, diagnostics are clean. A compose setup that keeps `node_modules` in an
+anonymous volume helps here, since the host and container installs stay
+independent.
+
+**Python.** Activate the project's virtualenv before starting Neovim:
+
+```sh
+source .venv/bin/activate && nvim
+```
+
+pyright does **not** auto-detect `.venv`; without activation it reports
+`Import "..." could not be resolved` for every third-party package. Activation
+is also what `nvim-coverage` needs to run `coverage json`, and what
+`neotest-python` needs to find its runner, so it is one habit covering three
+tools.
+
+**When this is not enough.** Dependencies that cannot build on the host, or a
+private registry reachable only from the container, would mean running the
+server inside the container instead — `cmd = { "docker", "exec", "-i", ... }`.
+That works only if the bind mount puts the source at the *same absolute path* on
+both sides, because the server reports container paths and Neovim expects host
+ones, and there is no URI translation here. Check with:
+
+```sh
+docker inspect -f '{{range .Mounts}}{{.Source}} -> {{.Destination}}{{"\n"}}{{end}}' <container>
+```
+
+`djlsp` is the exception that handles this itself: it takes
+`--docker-compose-file` and `--docker-compose-service` to introspect a Django
+project inside a running service while the server itself runs on the host.
+
 ## Notes
 
 - `telescope.nvim` tracks `master`, not `0.1.x`. The `0.1.x` branch calls
