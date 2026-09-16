@@ -10,7 +10,6 @@ install_desktop_packages:
       - code
       - firefox
       - firefox-nightly
-      - flameshot
       - gnome-tweaks
       - google-chrome-stable
     - require:

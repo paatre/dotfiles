@@ -33,13 +33,4 @@ configure_keyboard:
         gsettings set org.gnome.shell.keybindings show-screenshot-ui "['Print']"
         gsettings set org.gnome.shell.keybindings screenshot "['<Shift>Print']"
         gsettings set org.gnome.shell.keybindings screenshot-window "['<Alt>Print']"
-
-        # Flameshot has no hotkey of its own under Wayland, so it needs a
-        # custom binding. Setting the list declares the full set of custom
-        # keybindings, so any added through GNOME Settings are dropped here.
-        CUSTOM=/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/flameshot/
-        gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['$CUSTOM']"
-        gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$CUSTOM" name "Flameshot"
-        gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$CUSTOM" command "flameshot gui"
-        gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$CUSTOM" binding "<Super>Print"
     - runas: {{ user }}
