@@ -88,6 +88,11 @@ for those:
 ./ansible-local.sh check keyboard --no-pass
 ```
 
+`become` runs through `/usr/bin/sudo.ws`, the classic sudo Ubuntu still ships
+alongside sudo-rs. sudo-rs wraps the prompt that `sudo -p` asks for, which
+ansible-core 2.20.1 does not recognise, so become times out without ever sending
+the password. The setting can go once ansible-core carries the fix for it.
+
 Two differences from the Salt states are deliberate:
 
 * `ansible/site.yml` lists every group explicitly, so it also applies the
