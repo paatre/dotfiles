@@ -57,6 +57,41 @@ The Salt states are split into smaller modules, so individual pieces can be chec
 ./salt-local.sh test system.dotfiles
 ```
 
+## Trying out Ansible
+
+Ansible is being evaluated alongside Salt; both configure the same machine, and
+Salt remains the one `bootstrap.sh` runs. The playbook lives in `ansible/`, with
+one task file per Salt directory.
+
+```bash
+sudo apt install ansible
+
+./ansible-local.sh list            # every task and its tags
+./ansible-local.sh check           # dry run with diffs, changes nothing
+./ansible-local.sh apply           # apply everything
+```
+
+Tags mirror the Salt state names, so a single piece can be targeted the same way:
+
+```bash
+./ansible-local.sh check keyboard
+./ansible-local.sh apply installs
+./ansible-local.sh check repos,packages
+```
+
+Tasks that touch the system escalate with `become`, and `apply` asks for the
+sudo password once. Tasks that configure the user's desktop or home directory
+run unprivileged, so `check` and `apply` of tags like `keyboard`, `ptyxis` or
+`dotfiles` need no password at all.
+
+Two differences from the Salt states are deliberate:
+
+* `ansible/site.yml` lists every group explicitly, so it also applies the
+  `desktop`, `cloud` and `fonts` packages that Salt's highstate never reaches.
+* Desktop settings use the `dconf` module rather than shelling out to
+  `gsettings`, which reports changes accurately and needs no session bus
+  handling, because the play already runs as the user.
+
 ## Testing with LXC
 
 Before deploying changes to your host machine, you can test the bootstrapping process in an isolated LXC container using `test.sh`. This spins up a fresh Ubuntu container, copies the dotfiles, and runs the bootstrap script inside it.

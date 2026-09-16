@@ -1,0 +1,98 @@
+# Apt packages. Salt's pkg.installed refreshes the package database on its own
+# when a repository changed; here each task refreshes its own cache, so running
+# a single tag still picks up a repository added moments earlier.
+
+- name: Install core packages
+  become: true
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - btop
+      - curl
+      - fd-find
+      - fzf
+      - jq
+      - lxc
+      - ncdu
+      - pass
+      - ripgrep
+      - stow
+      - tealdeer
+      - tmux
+      - unzip
+      - util-linux-extra
+      - whois
+      - wl-clipboard
+      - zoxide
+  tags: [core]
+
+- name: Install development packages
+  become: true
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - cargo
+      - gh
+      - git
+      - git-delta
+      - git-filter-repo
+      - golang-go
+      - neovim
+      - nodejs
+      - npm
+  tags: [dev]
+
+- name: Install desktop packages
+  become: true
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - code
+      - firefox
+      - firefox-nightly
+      - gnome-tweaks
+      - google-chrome-stable
+  tags: [desktop]
+
+- name: Install container packages
+  become: true
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose-plugin
+  tags: [containers]
+
+- name: Install cloud packages
+  become: true
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - google-cloud-cli
+      - tailscale
+  tags: [cloud]
+
+- name: Install font packages
+  become: true
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - fonts-cascadia-code
+      - fonts-firacode
+      - fonts-powerline
+  tags: [fonts]

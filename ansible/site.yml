@@ -1,0 +1,39 @@
+# Mirrors salt/top.sls, but explicitly: Salt reaches repos and packages
+# through `include:` chains, which is why three package groups are silently
+# never applied by its highstate. Here every group is listed, so what runs is
+# what you can read.
+- name: Configure this machine
+  hosts: local
+  gather_facts: true
+
+  vars:
+    # The authoritative list of stow packages, as salt/system/dotfiles.sls had it.
+    stow_packages:
+      - bash
+      - bpytop
+      - fd
+      - fzf
+      - git
+      - gnome-terminal
+      - nvim
+      - starship
+      - tmux
+      - ubuntu
+      - vim
+
+  tasks:
+    - name: Apt repositories and signing keys
+      ansible.builtin.import_tasks: tasks/repos.yml
+      tags: [repos]
+
+    - name: Packages from apt
+      ansible.builtin.import_tasks: tasks/packages.yml
+      tags: [packages]
+
+    - name: Tools installed from upstream
+      ansible.builtin.import_tasks: tasks/installs.yml
+      tags: [installs]
+
+    - name: System and desktop configuration
+      ansible.builtin.import_tasks: tasks/system.yml
+      tags: [system]

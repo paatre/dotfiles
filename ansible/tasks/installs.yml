@@ -1,0 +1,151 @@
+# Tools installed from upstream rather than apt. Anything landing in the user's
+# home runs without become, which is the main difference from the Salt states:
+# there the run is root and each of these needed a `runas` plus a SUDO_USER
+# lookup to find the right home directory.
+
+- name: Install starship
+  become: true
+  ansible.builtin.shell:
+    cmd: curl -sS https://starship.rs/install.sh | sh -s -- -y
+    creates: /usr/local/bin/starship
+  tags: [starship]
+
+- name: Install nvm
+  ansible.builtin.shell:
+    cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+  tags: [nvm]
+
+- name: Install pyenv
+  ansible.builtin.shell:
+    cmd: curl https://pyenv.run | bash
+    creates: "{{ ansible_env.HOME }}/.pyenv/bin/pyenv"
+  tags: [pyenv]
+
+- name: Install deno
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://deno.land/install.sh | sh
+    creates: "{{ ansible_env.HOME }}/.deno/bin/deno"
+  tags: [deno]
+
+- name: Install pulumi
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://get.pulumi.com | sh
+    creates: "{{ ansible_env.HOME }}/.pulumi/bin/pulumi"
+  tags: [pulumi]
+
+- name: Install ollama
+  become: true
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://ollama.com/install.sh | sh
+    creates: /usr/local/bin/ollama
+  register: ollama_install
+  # The installer exits 1 when it cannot enable the systemd unit, which is the
+  # normal outcome in a container. Salt spelled this success_retcodes.
+  failed_when: ollama_install.rc not in [0, 1]
+  timeout: 600
+  tags: [ollama]
+
+- name: Install opencode
+  become: true
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://opencode.ai/install | bash
+    creates: /usr/local/bin/opencode
+  tags: [opencode]
+
+- name: Install tpm
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+    version: master
+    update: false
+  tags: [tpm]
+
+# --- tree-sitter-cli ---------------------------------------------------------
+# nvim-treesitter's main branch needs >= 0.26.1 and Ubuntu ships older, so this
+# comes from npm. The version gate replaces Salt's `unless` with sort -V.
+
+- name: Check the installed tree-sitter-cli version
+  ansible.builtin.command: tree-sitter --version
+  register: tree_sitter_version
+  changed_when: false
+  failed_when: false
+  tags: [tree_sitter_cli]
+
+- name: Install tree-sitter-cli from npm
+  become: true
+  ansible.builtin.command: npm install --global --no-fund --no-audit tree-sitter-cli
+  when: >-
+    tree_sitter_version.rc != 0
+    or tree_sitter_version.stdout.split(' ')[1] is version('0.26.1', '<')
+  tags: [tree_sitter_cli]
+
+# --- glab --------------------------------------------------------------------
+
+- name: Check whether glab is installed
+  ansible.builtin.stat:
+    path: /usr/bin/glab
+  register: glab_binary
+  tags: [glab]
+
+- name: Find the latest glab release
+  ansible.builtin.uri:
+    url: https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/releases
+    return_content: true
+  register: glab_releases
+  when: not glab_binary.stat.exists
+  tags: [glab]
+
+- name: Install glab
+  become: true
+  ansible.builtin.apt:
+    deb: >-
+      https://gitlab.com/gitlab-org/cli/-/releases/v{{ glab_version }}/downloads/glab_{{ glab_version }}_linux_amd64.deb
+  vars:
+    glab_version: "{{ glab_releases.json[0].tag_name | regex_replace('^v', '') }}"
+  when: not glab_binary.stat.exists
+  tags: [glab]
+
+# --- slack -------------------------------------------------------------------
+
+- name: Install slack
+  become: true
+  ansible.builtin.apt:
+    deb: "https://downloads.slack-edge.com/desktop-releases/linux/x64/{{ slack_version }}/slack-desktop-{{ slack_version }}-amd64.deb"
+  vars:
+    slack_version: "4.47.69"
+  tags: [slack]
+
+# --- aws cli -----------------------------------------------------------------
+
+- name: Check whether the AWS CLI is installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/aws
+  register: aws_binary
+  tags: [aws]
+
+- name: Create the AWS CLI staging directory
+  ansible.builtin.file:
+    path: /tmp/awscli
+    state: directory
+    mode: "0755"
+  when: not aws_binary.stat.exists
+  tags: [aws]
+
+- name: Unpack the AWS CLI installer
+  ansible.builtin.unarchive:
+    src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /tmp/awscli
+    remote_src: true
+    creates: /tmp/awscli/aws/install
+  when: not aws_binary.stat.exists
+  tags: [aws]
+
+- name: Install the AWS CLI
+  become: true
+  ansible.builtin.command:
+    cmd: ./aws/install --update
+    chdir: /tmp/awscli
+    creates: /usr/local/bin/aws
+  when: not aws_binary.stat.exists
+  tags: [aws]

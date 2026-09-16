@@ -1,0 +1,139 @@
+# System and desktop configuration.
+#
+# The dconf tasks are the clearest difference from Salt. There the run is root
+# and drops to the user with `runas`, which loses the D-Bus session address, so
+# `gsettings set` discarded its writes while still exiting 0 — the state had to
+# locate the bus and guard against its absence by hand. Here the play already
+# runs as the user, and community.general.dconf reports changes honestly.
+
+# --- lxd ---------------------------------------------------------------------
+
+- name: Install the lxd bridge firewall fix
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/NetworkManager/dispatcher.d/lxd-bridge-fix
+    owner: root
+    group: root
+    mode: "0755"
+    content: |
+      #!/bin/sh
+
+      IFACE=$1
+      ACTION=$2
+
+      if [ "$IFACE" = "lxdbr0" ] && [ "$ACTION" = "up" ]; then
+          if ! nft list chain ip filter FORWARD | grep -q 'oifname "lxdbr0" accept'; then
+              nft insert rule ip filter FORWARD oifname "lxdbr0" accept
+          fi
+
+          if ! nft list chain ip filter FORWARD | grep -q 'iifname "lxdbr0" accept'; then
+              nft insert rule ip filter FORWARD iifname "lxdbr0" accept
+          fi
+      fi
+  tags: [lxd]
+
+# --- dotfiles ----------------------------------------------------------------
+
+- name: Remove the stock dotfiles that stow would collide with
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/{{ item }}"
+    state: absent
+  loop:
+    - .bashrc
+    - .bash_logout
+    - .bash_profile
+    - .profile
+    - .vimrc
+  tags: [dotfiles]
+
+- name: Work out whether stow has anything to do
+  ansible.builtin.command:
+    cmd: "stow -R --simulate --verbose=1 -t {{ ansible_env.HOME }} {{ stow_packages | join(' ') }}"
+    chdir: "{{ ansible_env.HOME }}/dotfiles"
+  register: stow_simulate
+  changed_when: false
+  tags: [dotfiles]
+
+- name: Stow the dotfile packages
+  ansible.builtin.command:
+    cmd: "stow -R -t {{ ansible_env.HOME }} {{ stow_packages | join(' ') }}"
+    chdir: "{{ ansible_env.HOME }}/dotfiles"
+  when: stow_simulate.stderr | length > 0
+  tags: [dotfiles]
+
+# --- ptyxis ------------------------------------------------------------------
+
+- name: Configure Ptyxis
+  community.general.dconf:
+    key: "/org/gnome/Ptyxis/{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    - { key: font-name, value: "'Cascadia Mono NF 12'" }
+    - { key: use-system-font, value: "false" }
+    - { key: audible-bell, value: "false" }
+  loop_control:
+    label: "{{ item.key }}"
+  tags: [ptyxis]
+
+- name: Read the default Ptyxis profile UUID
+  community.general.dconf:
+    key: /org/gnome/Ptyxis/default-profile-uuid
+    state: read
+  register: ptyxis_profile
+  tags: [ptyxis]
+
+- name: Configure the default Ptyxis profile
+  community.general.dconf:
+    key: "/org/gnome/Ptyxis/Profiles/{{ ptyxis_profile.value | regex_replace(\"^'|'$\", '') }}/{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    - { key: custom-command, value: "'tmux'" }
+    - { key: use-custom-command, value: "true" }
+    - { key: label, value: "'Default'" }
+    - { key: opacity, value: "0.92" }
+    - { key: palette, value: "'Gruvbox'" }
+  loop_control:
+    label: "{{ item.key }}"
+  tags: [ptyxis]
+
+# --- keyboard ----------------------------------------------------------------
+# Deliberately narrow: window and workspace bindings stay at GNOME's defaults,
+# and edge-tiling plus toggle-tiled-left/right belong to the Tiling Assistant
+# extension, which restores its recorded values when disabled.
+
+- name: Configure keyboard and screenshot bindings
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    # Which key opens the Activities overview. GNOME defaults to 'Super',
+    # meaning either key; pinning the left one keeps it consistent across
+    # laptop keyboards and whatever an external keyboard sends.
+    - { key: /org/gnome/mutter/overlay-key, value: "'Super_L'" }
+    - { key: /org/gnome/desktop/input-sources/sources, value: "[('xkb', 'fi')]" }
+    - { key: /org/gnome/desktop/input-sources/show-all-sources, value: "false" }
+    # Print opens the picker for selection, screen or window; the other two
+    # skip it.
+    - { key: /org/gnome/shell/keybindings/show-screenshot-ui, value: "['Print']" }
+    - { key: /org/gnome/shell/keybindings/screenshot, value: "['<Shift>Print']" }
+    - { key: /org/gnome/shell/keybindings/screenshot-window, value: "['<Alt>Print']" }
+  loop_control:
+    label: "{{ item.key }}"
+  tags: [keyboard]
+
+# --- docker ------------------------------------------------------------------
+
+- name: Ensure the docker group exists
+  become: true
+  ansible.builtin.group:
+    name: docker
+    state: present
+  tags: [docker]
+
+- name: Add the user to the docker group
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: true
+  tags: [docker]
