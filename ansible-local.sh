@@ -52,8 +52,11 @@ if [ $# -ge 1 ] && [[ "$1" != -* ]]; then
     shift
 fi
 
+# Always ask, unless told not to. Probing with `sudo -n true` does not work:
+# sudo's timestamp is scoped to the terminal by default, and ansible runs sudo
+# without one, so a credential cached in this shell does not apply there.
 become_args=()
-if [ "$ask_become" = true ] && ! sudo -n true 2>/dev/null; then
+if [ "$ask_become" = true ]; then
     become_args=(--ask-become-pass)
 fi
 
