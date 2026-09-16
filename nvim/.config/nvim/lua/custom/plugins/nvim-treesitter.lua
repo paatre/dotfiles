@@ -29,6 +29,7 @@ return {
 			"luadoc",
 			"markdown",
 			"python",
+			"regex",
 			"vim",
 			"vimdoc",
 		})

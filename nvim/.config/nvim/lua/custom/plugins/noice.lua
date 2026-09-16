@@ -7,5 +7,7 @@ return {
 	dependencies = {
 		-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
 		"MunifTanjim/nui.nvim",
+		-- Backend for noice's `notify` view; without it those routes have nowhere to go
+		"rcarriga/nvim-notify",
 	},
 }
