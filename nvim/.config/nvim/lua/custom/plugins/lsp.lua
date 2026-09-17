@@ -73,9 +73,9 @@ return {
 			end,
 		})
 
-		-- Neovim's LSP capabilities are extended by plugins like nvim-cmp and then broadcast to language servers
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+		-- Neovim advertises a subset of the LSP specification by default; blink
+		-- supports more than that, so it supplies the capabilities to announce.
+		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 		-- Enable and automatically install the following language servers
 		local servers = {
