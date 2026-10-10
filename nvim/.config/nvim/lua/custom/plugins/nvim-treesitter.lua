@@ -1,4 +1,4 @@
--- Firt and foremost, nvim-treesitter provides an interface for tree-sitter in Neovim: https://tree-sitter.github.io/tree-sitter/.
+-- First and foremost, nvim-treesitter provides an interface for tree-sitter in Neovim: https://tree-sitter.github.io/tree-sitter/.
 -- Tree-sitter is used to parse code into a syntax tree, which allows editors like Neovim to understand the structure of the code.
 -- This enables advanced features such as:
 -- Syntax highlighting
@@ -11,6 +11,7 @@
 
 return {
 	"nvim-treesitter/nvim-treesitter",
+	branch = "main",
 	lazy = false,
 	build = ":TSUpdate",
 	config = function()
