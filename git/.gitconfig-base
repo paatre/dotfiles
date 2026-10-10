@@ -19,6 +19,7 @@
   lo = log --oneline
   st = status
   sw = switch
+  tags = log --oneline --no-walk --tags
   undo = reset --soft HEAD^
   unstage = restore --staged :/
 [branch]
